@@ -1,0 +1,3 @@
+class SatelliteChannel < Channel
+
+end

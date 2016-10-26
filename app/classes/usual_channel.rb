@@ -1,0 +1,3 @@
+class UsualChannel < Channel
+
+end
