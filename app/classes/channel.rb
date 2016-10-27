@@ -1,17 +1,13 @@
 class Channel
-  attr_accessor :type, :weight, :error_prob
+  attr_accessor :type, :weight, :error_prob, :first_node, :second_node
   attr_reader :time_coefficient
 
-  def initialize(weight, error_prob, type = :duplex)
-    raise ArgumentError,
-          'Argument is wrong' unless [:duplex, :half_duplex].include?(type)
-    raise ArgumentError,
-          'Argument is not numeric or negative' unless weight.is_a?(Numeric) and weight >= 0
-    raise ArgumentError,
-          'Argument is wrong' unless error_prob.is_a?(Numeric) and error_prob >= 0 and error_prob <= 1
-    @type = type
-    @weight = weight
-    @error_prob = error_prob
+  def initialize(weight = 0, error_prob = 0, type = :duplex)
+    self.type = type
+    self.weight = weight
+    self.error_prob = error_prob
+    @first_node = nil
+    @second_node = nil
   end
 
   def type=(value)
@@ -29,6 +25,18 @@ class Channel
     raise ArgumentError,
           'Argument is wrong' unless value.is_a?(Numeric) and value >= 0 and value <= 1
     @error_prob = value
+  end
+
+  def first_node=(value)
+    raise 'Node must differ from another one' unless value != @second_node
+    raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
+    @first_node = value
+  end
+
+  def second_node=(value)
+    raise 'Node must differ from another one' unless value != @first_node
+    raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
+    @second_node = value
   end
 
   def set_time_coefficient(coefficient)

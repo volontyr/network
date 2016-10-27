@@ -2,6 +2,7 @@ require 'rspec/core'
 require_relative '../app/classes/channel'
 require_relative '../app/classes/satellite_channel'
 require_relative '../app/classes/usual_channel'
+require_relative '../app/classes/node'
 
 describe 'Channels' do
 
@@ -32,5 +33,16 @@ describe 'Channels' do
     channel.error_prob = 0.1
     expect(channel.error_prob).to eq(0.1)
     expect { channel.error_prob = 1.1 }.to raise_error(ArgumentError)
+  end
+
+  it 'should have two different nodes' do
+    channel = Channel.new(10, 0.1)
+    channel.first_node = Node.new
+    channel.second_node = Node.new
+    expect(channel.first_node).not_to eq(channel.second_node)
+    second_channel = Channel.new
+    some_node = Node.new
+    second_channel.first_node = some_node
+    expect { second_channel.second_node = some_node }.to raise_error('Node must differ from another one')
   end
 end

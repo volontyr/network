@@ -1,5 +1,6 @@
 require 'rspec/core'
 require_relative '../app/classes/node'
+require_relative '../app/classes/channel'
 
 describe 'Switching Node' do
   let(:node) { Node.new }
@@ -15,6 +16,16 @@ describe 'Switching Node' do
     another_node = Node.new(1, 1)
     expect(node.coord_x).to eq(node.coord_y) and eq(0)
     expect(another_node.coord_x).to eq(another_node.coord_y) and eq(1)
+  end
+
+  it 'should have a list of different channels' do
+    node = Node.new
+    channel_1 = Channel.new
+    channel_2 = Channel.new
+    node.add_channel(channel_1)
+    node.add_channel(channel_2)
+    node.add_channel(channel_2)
+    expect(node.channels.size).to eq(2)
   end
 
 end
