@@ -28,4 +28,42 @@ describe 'Switching Node' do
     expect(node.channels.size).to eq(2)
   end
 
+  it 'adds channels not busy with two nodes' do
+    some_node = Node.new
+    another_node = Node.new
+    node = Node.new
+    channel_1 = Channel.new
+    channel_2 = Channel.new
+
+    channel_1.first_node = some_node
+    channel_1.second_node = another_node
+    expect(some_node.channels.size).to eq(1)
+    expect(another_node.channels.size).to eq(1)
+
+    channel_2.first_node = some_node
+    expect(channel_2.first_node).to eq(some_node)
+    expect { node.add_channel(channel_1) }.to raise_error('Channel is busy')
+    node.add_channel(channel_2)
+    expect(channel_2.second_node).to eq(node)
+  end
+
+  it "may re-assign channels's nodes" do
+    some_node = Node.new
+    another_node = Node.new
+    channel = Channel.new
+    channel.first_node = some_node
+    expect(channel.first_node).to eq(some_node)
+    channel.first_node = another_node
+    expect(channel.first_node).to eq(another_node)
+  end
+
+  it "adds node to channel when channel's added to node" do
+    node_1 = Node.new
+    node_2 = Node.new
+    channel = Channel.new
+    node_1.add_channel(channel)
+    expect(channel.first_node).to eq(node_1)
+    node_2.add_channel(channel)
+    expect(channel.second_node).to eq(node_2)
+  end
 end
