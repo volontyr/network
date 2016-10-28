@@ -31,12 +31,14 @@ class Channel
     raise 'Node must differ from another one' unless value != @second_node
     raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
     @first_node = value
+    value.add_channel(self) unless value.channels.include?(self)
   end
 
   def second_node=(value)
     raise 'Node must differ from another one' unless value != @first_node
     raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
     @second_node = value
+    value.add_channel(self) unless value.channels.include?(self)
   end
 
   def set_time_coefficient(coefficient)
