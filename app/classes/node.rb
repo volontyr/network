@@ -1,5 +1,3 @@
-require 'set'
-
 class Node
   attr_reader :id, :channels
   attr_accessor :coord_x, :coord_y

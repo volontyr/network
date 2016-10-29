@@ -1,0 +1,10 @@
+<div class="container">
+  <%= form_tag('/create', method: 'post') do %>
+      <%= label_tag :nodes_number, 'Enter number of nodes' %><br>
+      <%= number_field_tag :nodes_number %><br>
+      <%= label_tag :average_channels_num, "Enter average number of node's channels" %><br>
+      <%= number_field_tag :average_channels_num, nil, :step => :any %><br>
+
+      <%= submit_tag('Generate network', class: 'btn btn-success') %>
+  <% end %>
+</div>
