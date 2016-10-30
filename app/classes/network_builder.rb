@@ -31,6 +31,7 @@ class NetworkBuilder
   end
 
   def generate_network
+    Node.num = 0
     @network_generator.generate(self, @network.nodes_number, @network.average_channels_num)
   end
 

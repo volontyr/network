@@ -30,6 +30,10 @@ class Node
     end
   end
 
+  def self.num=(value)
+    @@num = value
+  end
+
   def to_json(*a)
     as_json.to_json(*a)
   end

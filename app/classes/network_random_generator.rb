@@ -28,7 +28,7 @@ class NetworkRandomGenerator
         rand_ind_1 = rand(0...nodes_len)
         rand_ind_2 = rand(0...nodes_len)
         condition = (builder.network.nodes[rand_ind_1].channels &
-            builder.network.nodes[rand_ind_2].channels == [] || rand_ind_1 == rand_ind_2)
+            builder.network.nodes[rand_ind_2].channels != [] || rand_ind_1 == rand_ind_2)
       end while condition
       add_channel(builder, builder.network.nodes[rand_ind_1], builder.network.nodes[rand_ind_2])
     end
@@ -41,9 +41,9 @@ class NetworkRandomGenerator
       (1..nodes_number).each do
         builder.add_node(x, y)
         # TO CHANGE
-        x += 5
+        x += 50
         # TO CHANGE
-        y += 5
+        y += 50
       end
     end
 

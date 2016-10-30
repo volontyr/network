@@ -1,6 +1,6 @@
+<% unless @network.blank? %>
+    <button onclick="generate_network(<%= @network %>)" type="submit">Generate network</button>
+<% end %>
 <canvas id="myCanvas" width="1300" height="700">
 
 </canvas>
-<% unless @network.blank? %>
-  <button onclick="generate_network(<%= @network %>)" type="submit">Generate network</button>
-<% end %>

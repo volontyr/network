@@ -12,15 +12,9 @@ class NetworkController < ApplicationController
 
   def create
     nodes_number = params[:nodes_number].to_i
-    avg_channels_num = params[:average_channels_num].to_i
-    max_channels_num = (nodes_number - 1) * nodes_number / 2
-    actual_channels_num = nodes_number * avg_channels_num / 2
-    conditions = []
-    conditions << (avg_channels_num * nodes_number % 2 == 0)
-    conditions << (actual_channels_num >= nodes_number - 1)
-    conditions << (actual_channels_num <= max_channels_num)
+    avg_channels_num = params[:average_channels_num].to_f
 
-    if conditions.include?(false)
+    if not_valid_params?(nodes_number, avg_channels_num)
       render 'new'
     else
       builder = NetworkBuilder.new(nodes_number, avg_channels_num)
@@ -32,5 +26,16 @@ class NetworkController < ApplicationController
       redirect_to network_path
     end
   end
+
+  private
+    def not_valid_params?(nodes_number, avg_channels_num)
+      max_channels_num = (nodes_number - 1) * nodes_number / 2
+      actual_channels_num = nodes_number * avg_channels_num / 2
+      conditions = []
+      conditions << (avg_channels_num * nodes_number % 2 == 0)
+      conditions << (actual_channels_num >= nodes_number - 1)
+      conditions << (actual_channels_num <= max_channels_num)
+      conditions.include?(false)
+    end
 
 end
