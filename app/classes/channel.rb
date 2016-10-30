@@ -1,3 +1,5 @@
+require 'json'
+
 class Channel
   attr_accessor :type, :weight, :error_prob, :first_node, :second_node
   attr_reader :time_coefficient
@@ -44,4 +46,27 @@ class Channel
   def set_time_coefficient(coefficient)
     @time_coefficient = coefficient
   end
+
+  def to_json(*a)
+    as_json.to_json(*a)
+  end
+
+  def as_json(options = {})
+    {
+        json_class: self.class.name,
+        weight: @weight, error_prob: @error_prob, type: @type,
+        first_node: @first_node.id, second_node: @second_node.id
+    }
+  end
+
+  def self.json_create(o)
+    channel_from_json = new
+    channel_from_json.weight = o['weight']
+    channel_from_json.error_prob = o['error_prob']
+    channel_from_json.type = o['type'].to_sym
+    # channel_from_json.first_node = o['first_node']
+    # channel_from_json.second_node = o['second_node']
+    channel_from_json
+  end
+
 end

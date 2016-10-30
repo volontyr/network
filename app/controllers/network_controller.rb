@@ -1,7 +1,13 @@
-# require "#{Rails.root}/app/classes/network_builder"
+require 'json'
+require 'oj'
+require 'oj_mimic_json'
 
 class NetworkController < ApplicationController
   def new
+  end
+
+  def index
+    @network = $network
   end
 
   def create
@@ -15,10 +21,16 @@ class NetworkController < ApplicationController
     conditions << (actual_channels_num <= max_channels_num)
 
     if conditions.include?(false)
-      redirect_to root_path
+      render 'new'
     else
       builder = NetworkBuilder.new(nodes_number, avg_channels_num)
+      builder.network_generator = NetworkRandomGenerator.new
       builder.generate_network
+      $network = builder.network.to_json
+      # puts JSON.load(JSON.dump(builder.network))
+      # puts Oj.dump(builder.network, indent: 2)
+      redirect_to network_path
     end
   end
+
 end

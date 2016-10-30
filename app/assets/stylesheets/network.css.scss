@@ -1,0 +1,99 @@
+// Place all the styles related to the network controller here.
+// They will automatically be included in application.css.sass.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+/* mixins, variables, etc. */
+
+$gray-medium-light: #eaeaea;
+
+@mixin box_sizing {
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
+
+/* universal */
+
+body {
+  padding-top: 60px;
+}
+
+.money {
+  display: block;
+  float: left;
+  width: 45%;
+  margin: auto;
+  text-align: center;
+}
+
+.exchange_result {
+  display: block;
+  float: right;
+  width: 45%;
+  margin: auto;
+  text-align: center;
+}
+
+.table th {
+  text-align: center;
+}
+
+.buttons {
+  clear: both;
+  width: 75%;
+  text-align: center;
+  margin: auto;
+}
+
+.container {
+  width: 100%;
+  margin: auto;
+}
+
+.container form {
+  text-align: center;
+}
+
+/* typography */
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3em;
+  letter-spacing: -2px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.2em;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: $gray-medium-light;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.7em;
+}
+
+
+input, textarea, select {
+  border: 1px solid #bbb;
+  width: 75%;
+  margin-bottom: 15px;
+  @include box_sizing;
+}
+
+.buttons input {
+  width: 20%;
+  margin-bottom: 15px;
+  @include box_sizing;
+}
+
+input {
+  height: auto !important;
+}
