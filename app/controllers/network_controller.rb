@@ -15,6 +15,7 @@ class NetworkController < ApplicationController
     avg_channels_num = params[:average_channels_num].to_f
 
     if not_valid_params?(nodes_number, avg_channels_num)
+      flash[:danger] = "Couldn't create network with these parameters"
       render 'new'
     else
       builder = NetworkBuilder.new(nodes_number, avg_channels_num)

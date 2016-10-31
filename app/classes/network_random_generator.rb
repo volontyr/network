@@ -1,4 +1,9 @@
 class NetworkRandomGenerator
+  attr_accessor :calculator
+
+  def initialize
+    @calculator = CoordinatesCircleCalculator.new
+  end
 
   def generate(builder, nodes_number, avg_channels_num)
     add_nodes(builder, nodes_number)
@@ -8,6 +13,7 @@ class NetworkRandomGenerator
       ind_1 = (i >= nodes_number) ? i % nodes_number : i
       ind_2 = (i + 1 >= nodes_number) ? (i + 1) % nodes_number : i + 1
       add_channel(builder, nodes[ind_1], nodes[ind_2])
+      break if ind_2 == 0
     end
 
     nodes_len = builder.network.nodes.size
@@ -37,13 +43,14 @@ class NetworkRandomGenerator
 
   private
     def add_nodes(builder, nodes_number)
-      x, y = 0, 0
+      calculator.nodes_number = nodes_number
+      x = calculator.initial_x
+      y = calculator.calculate_y(x)
       (1..nodes_number).each do
         builder.add_node(x, y)
-        # TO CHANGE
-        x += 50
-        # TO CHANGE
-        y += 50
+          x = @calculator.calculate_x(x)
+          y = @calculator.calculate_y(x)
+
       end
     end
 
