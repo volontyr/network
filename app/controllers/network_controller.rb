@@ -32,13 +32,8 @@ class NetworkController < ApplicationController
   def add_node
     if (node_id = params[:node].to_i)
       new_node = @@builder.add_node(50, 50)
-      existed_node = nil
-      @@builder.network.nodes.each do |node|
-        if node.id == node_id
-          existed_node = node
-          break
-        end
-      end
+      existed_node = @@builder.network.find_node(node_id)
+
       weights_len = @@builder.network.channel_weights.size
       weight = @@builder.network.channel_weights[rand(0...weights_len)]
       error_prob = rand(0..99) / 100
@@ -54,6 +49,43 @@ class NetworkController < ApplicationController
     redirect_to network_path
   end
 
+  def add_channel
+    node_id_1 = params[:node_1].to_i
+    node_id_2 = params[:node_2].to_i
+    channels = @@builder.network.channels
+    if node_id_1 and node_id_2
+      if node_id_1 == node_id_2
+        flash[:danger] = 'Nodes must differ from each other'
+      elsif channels.any? {|c| [c.first_node, c.second_node].to_set == [node_id_1, node_id_2].to_set}
+        flash[:danger] = 'Channel between these nodes already exists'
+      else
+        existed_node_1 = @@builder.network.find_node(node_id_1)
+        existed_node_2 = @@builder.network.find_node(node_id_2)
+
+        weights_len = @@builder.network.channel_weights.size
+        weight = @@builder.network.channel_weights[rand(0...weights_len)]
+        error_prob = rand(0..99) / 100
+        @@builder.add_channel(weight, error_prob, :duplex, existed_node_1, existed_node_2)
+      end
+    end
+    redirect_to network_path
+  end
+
+  def remove_channel
+    node_id_1 = params[:node_1].to_i
+    node_id_2 = params[:node_2].to_i
+    channels = @@builder.network.channels
+    if node_id_1 and node_id_2
+      if node_id_1 == node_id_2
+        flash[:danger] = 'Nodes must differ from each other'
+      elsif channels.any? {|c| [c.first_node, c.second_node].to_set == [node_id_1, node_id_2].to_set}
+        @@builder.remove_channel(node_id_1, node_id_2)
+      else
+        flash[:danger] = "There's no channel between these nodes"
+      end
+    end
+    redirect_to network_path
+  end
 
   private
     def not_valid_params?(nodes_number, avg_channels_num)

@@ -16,12 +16,12 @@ class Node
     raise ArgumentError, 'Argument must be Channel type' unless value.is_a?(Channel)
     raise ArgumentError,
           'Channel is busy' unless [value.first_node, value.second_node].any? do |member|
-          [self, nil].include?(member)
+          [@id, nil].include?(member)
     end
     @channels << value unless @channels.include?(value)
 
     # add link with this node to channel (value)
-    unless [value.first_node, value.second_node].include?(self)
+    unless [value.first_node, value.second_node].include?(@id)
       if value.first_node.nil?
         value.first_node = self
       elsif value.second_node.nil?

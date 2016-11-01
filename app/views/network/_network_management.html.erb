@@ -1,11 +1,16 @@
 <% unless @network.blank? %>
-    <!--<button class="btn btn-success" id="add_node">Add node</button>-->
-    <%= render partial: 'node_form', :locals => { action: '/network/add_node',
-                button_name: 'Add node', button_class: 'success' } %>
 
-    <%= render partial: 'node_form', :locals => { action: '/network/remove_node',
-                button_name: 'Remove node', button_class: 'danger'} %>
+    <%= render partial: 'form_for_node', :locals => {action: '/network/add_node',
+                                            button_name: 'Add node', button_class: 'success' } %>
 
+    <%= render partial: 'form_for_node', :locals => {action: '/network/remove_node',
+                                            button_name: 'Remove node', button_class: 'danger'} %>
+
+    <%= render partial: 'form_for_channel', :locals => {action: '/network/add_channel',
+                                            button_name: 'Add channel', button_class: 'success'} %>
+
+    <%= render partial: 'form_for_channel', :locals => {action: '/network/remove_channel',
+                                            button_name: 'Remove channel', button_class: 'danger'} %>
 
     <button class="btn btn-default" onclick="generate_network(<%= @network_json %>)" type="submit">
         Generate network

@@ -30,16 +30,16 @@ class Channel
   end
 
   def first_node=(value)
-    raise 'Node must differ from another one' unless value != @second_node
+    raise 'Node must differ from another one' unless value.id != @second_node
     raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
-    @first_node = value
+    @first_node = value.id
     value.add_channel(self) unless value.channels.include?(self)
   end
 
   def second_node=(value)
-    raise 'Node must differ from another one' unless value != @first_node
+    raise 'Node must differ from another one' unless value.id != @first_node
     raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
-    @second_node = value
+    @second_node = value.id
     value.add_channel(self) unless value.channels.include?(self)
   end
 
@@ -55,7 +55,7 @@ class Channel
     {
         json_class: self.class.name,
         weight: @weight, error_prob: @error_prob, type: @type,
-        first_node: @first_node.id, second_node: @second_node.id
+        first_node: @first_node, second_node: @second_node
     }
   end
 
@@ -64,8 +64,8 @@ class Channel
     channel_from_json.weight = o['weight']
     channel_from_json.error_prob = o['error_prob']
     channel_from_json.type = o['type'].to_sym
-    # channel_from_json.first_node = o['first_node']
-    # channel_from_json.second_node = o['second_node']
+    channel_from_json.first_node = o['first_node']
+    channel_from_json.second_node = o['second_node']
     channel_from_json
   end
 

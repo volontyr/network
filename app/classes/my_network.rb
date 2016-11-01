@@ -12,6 +12,17 @@ class MyNetwork
     @average_channels_num = 0
   end
 
+  def find_node(node_id)
+    found_node = nil
+    @nodes.each do |node|
+      if node.id == node_id
+        found_node = node
+        break
+      end
+    end
+    found_node
+  end
+
   def to_json(*a)
     as_json.to_json(*a)
   end

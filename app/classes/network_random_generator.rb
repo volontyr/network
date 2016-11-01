@@ -52,7 +52,6 @@ class NetworkRandomGenerator
         builder.add_node(x, y)
           x = @calculator.calculate_x(x)
           y = @calculator.calculate_y(x)
-
       end
     end
 

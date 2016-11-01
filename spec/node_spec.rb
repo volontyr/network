@@ -41,10 +41,10 @@ describe 'Switching Node' do
     expect(another_node.channels.size).to eq(1)
 
     channel_2.first_node = some_node
-    expect(channel_2.first_node).to eq(some_node)
+    expect(channel_2.first_node).to eq(some_node.id)
     expect { node.add_channel(channel_1) }.to raise_error('Channel is busy')
     node.add_channel(channel_2)
-    expect(channel_2.second_node).to eq(node)
+    expect(channel_2.second_node).to eq(node.id)
   end
 
   it "may re-assign channels's nodes" do
@@ -52,9 +52,9 @@ describe 'Switching Node' do
     another_node = Node.new
     channel = Channel.new
     channel.first_node = some_node
-    expect(channel.first_node).to eq(some_node)
+    expect(channel.first_node).to eq(some_node.id)
     channel.first_node = another_node
-    expect(channel.first_node).to eq(another_node)
+    expect(channel.first_node).to eq(another_node.id)
   end
 
   it "adds node to channel when channel's added to node" do
@@ -62,8 +62,8 @@ describe 'Switching Node' do
     node_2 = Node.new
     channel = Channel.new
     node_1.add_channel(channel)
-    expect(channel.first_node).to eq(node_1)
+    expect(channel.first_node).to eq(node_1.id)
     node_2.add_channel(channel)
-    expect(channel.second_node).to eq(node_2)
+    expect(channel.second_node).to eq(node_2.id)
   end
 end

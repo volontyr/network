@@ -14,8 +14,8 @@ describe 'Network' do
     network = builder.network
     expect(network.nodes.size).to eq(2)
     expect(network.channels.size).to eq(1)
-    expect(network.channels[0].first_node).to eq(node_1)
-    expect(network.channels[0].second_node).to eq(node_2)
+    expect(network.channels[0].first_node).to eq(node_1.id)
+    expect(network.channels[0].second_node).to eq(node_2.id)
   end
 
   it 'can change nodes number' do
