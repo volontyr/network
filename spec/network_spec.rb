@@ -41,4 +41,35 @@ describe 'Network' do
       expect(node.channels.size).to be > 0
     end
   end
+
+  it 'remove node with some id' do
+    builder = NetworkBuilder.new(5, 4)
+    builder.network_generator = NetworkRandomGenerator.new
+    builder.generate_network
+    channels_all = builder.network.channels.size
+    channels_of_node_3 = builder.network.nodes[3].channels.size
+    builder.remove_node(3)
+    expect(builder.network.nodes.size).to eq(4)
+    expect(builder.network.channels.size).to eq(channels_all - channels_of_node_3)
+  end
+
+  it "raises exception if id doesn't exist" do
+    builder = NetworkBuilder.new(5, 4)
+    builder.network_generator = NetworkRandomGenerator.new
+    builder.generate_network
+    expect { builder.remove_node(6) }.to raise_error("Such node id doesn't exist")
+    expect(builder.network.nodes.size).to eq(5)
+    expect(builder.network.channels.size).to eq(10)
+  end
+
+  it 'removes channel between two nodes' do
+    node_1 = builder.add_node(0, 0)
+    node_2 = builder.add_node(5, 5)
+    builder.add_channel(10, 0.15, :duplex, node_1, node_2)
+    builder.remove_channel(node_1.id, node_2.id)
+    network = builder.network
+    expect(network.nodes.size).to eq(2)
+    expect(network.channels.size).to eq(0)
+  end
+
 end

@@ -11,31 +11,36 @@ $gray-medium-light: #eaeaea;
   box-sizing:         border-box;
 }
 
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}
+
+
 /* universal */
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+  &:hover {
+    color: $gray-medium-light;
+    text-decoration: none;
+  }
+}
 
 body {
   padding-top: 60px;
 }
 
-.money {
-  display: block;
-  float: left;
-  width: 45%;
-  margin: auto;
-  text-align: center;
-}
-
-.exchange_result {
-  display: block;
-  float: right;
-  width: 45%;
-  margin: auto;
-  text-align: center;
-}
-
-.table th {
-  text-align: center;
-}
 
 .buttons {
   clear: both;

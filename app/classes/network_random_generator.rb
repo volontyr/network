@@ -1,3 +1,5 @@
+require_relative 'coordinates_circle_calculator'
+
 class NetworkRandomGenerator
   attr_accessor :calculator
 

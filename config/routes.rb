@@ -2,8 +2,10 @@ Rails.application.routes.draw do
 
   root 'network#new'
   get 'network/new'
-  post '/create' => 'network#create'
-  get 'network' => 'network#index'
+  post '/create'             => 'network#create'
+  get 'network'              => 'network#index'
+  post 'network/add_node'    => 'network#add_node'
+  post 'network/remove_node' => 'network#remove_node'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,0 +1,16 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <%= button_name %> <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <%= form_tag(action, method: 'post') do %>
+          <p>
+            Choose node to add to <br>
+            <%= select_tag :node, options_for_select(@network.nodes.collect{ |n| n.id }) %>
+          </p>
+          <%= submit_tag('Submit', class: "btn btn-#{button_class}") %>
+      <% end %>
+    </li>
+  </ul>
+</div>

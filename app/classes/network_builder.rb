@@ -20,6 +20,15 @@ class NetworkBuilder
     node
   end
 
+  def remove_node(node_id)
+    raise ArgumentError, "Such node id doesn't exist" unless @network.nodes.any? { |n| n.id == node_id }
+    @network.nodes.each do |node|
+      node.channels.delete_if { |c| [c.first_node.id, c.second_node.id].include?(node_id) }
+    end
+    @network.channels.delete_if { |c| [c.first_node.id, c.second_node.id].include?(node_id) }
+    @network.nodes.delete_if { |n| n.id == node_id }
+  end
+
   # adds channel to the network and returns its instance
   def add_channel(weight, error_prob, type= :duplex, first_node=nil, second_node=nil, channel_type= :usual)
     message = "#{channel_type}_channel"
@@ -30,8 +39,23 @@ class NetworkBuilder
     channel
   end
 
+  def remove_channel(node_id_1, node_id_2)
+    @network.nodes.each do |node|
+      if node.id == node_id_1 or node.id == node_id_2
+        node.channels.delete_if do |c|
+          c.first_node.id == node_id_1 and c.second_node.id == node_id_2 or
+              c.first_node.id == node_id_2 and c.second_node.id == node_id_1
+        end
+      end
+    end
+    @network.channels.delete_if do |c|
+      c.first_node.id == node_id_1 and c.second_node.id == node_id_2 or
+          c.first_node.id == node_id_2 and c.second_node.id == node_id_1
+    end
+  end
+
   def generate_network
-    Node.num = 0
+    Node.num = 0 # set node's id counter to zero
     @network_generator.generate(self, @network.nodes_number, @network.average_channels_num)
   end
 

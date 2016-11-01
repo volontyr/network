@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require bootstrap-sprockets
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
@@ -20,6 +21,7 @@ function generate_network(network) {
     var nodes = network.data.nodes;
     var channels = network.data.channels;
 
+    $myCanvas.removeLayers();
     $myCanvas.clearCanvas();
 
     for (var i = 0; i < channels.length; i++) {
@@ -31,8 +33,8 @@ function generate_network(network) {
             strokeStyle: "black",
             strokeWidth: 5,
             draggable: true,
-            x1: nodes[channels[i].first_node].coord_x, y1: nodes[channels[i].first_node].coord_y,
-            x2: nodes[channels[i].second_node].coord_x, y2: nodes[channels[i].second_node].coord_y
+            x1: find_node(nodes, first_node).coord_x, y1: find_node(nodes, first_node).coord_y,
+            x2: find_node(nodes, second_node).coord_x, y2: find_node(nodes, second_node).coord_y
         });
     }
 
@@ -40,11 +42,13 @@ function generate_network(network) {
         $myCanvas.drawArc({
             layer: true,
             draggable: true,
-            bringToFront: true,
+            // bringToFront: true,
             name: "name" + i,
-            fillStyle: "steelblue",
+            groups: ["node_and_text" + i],
+            dragGroups: ["node_and_text" + i],
+            fillStyle: "darkred",
             x: nodes[i].coord_x, y: nodes[i].coord_y,
-            radius: 30,
+            radius: 15,
             shadowX: -1, shadowY: 8,
             shadowBlur: i,
             shadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -54,17 +58,34 @@ function generate_network(network) {
                 nodes[parseInt(layerName.slice(-1))].coord_y = layer.y;
                 nodes[parseInt(layerName.slice(-1))].channels.forEach(function (channel) {
                     var channelName = "channel" + channel.first_node + channel.second_node;
-                    $myCanvas.getLayer(channelName).x1 = nodes[channel.first_node].coord_x;
-                    $myCanvas.getLayer(channelName).y1 = nodes[channel.first_node].coord_y;
-                    $myCanvas.getLayer(channelName).x2 = nodes[channel.second_node].coord_x;
-                    $myCanvas.getLayer(channelName).y2 = nodes[channel.second_node].coord_y;
+                    $myCanvas.getLayer(channelName).x1 = find_node(nodes, channel.first_node).coord_x;
+                    $myCanvas.getLayer(channelName).y1 = find_node(nodes, channel.first_node).coord_y;
+                    $myCanvas.getLayer(channelName).x2 = find_node(nodes, channel.second_node).coord_x;
+                    $myCanvas.getLayer(channelName).y2 = find_node(nodes, channel.second_node).coord_y;
                 });
             }
+        }).drawText({
+            layer: true,
+            groups: ["node_and_text" + i],
+            text: nodes[i].id,
+            fontSize: 20,
+            name: "node_number" + i,
+            x: nodes[i].coord_x, y: nodes[i].coord_y,
+            fillStyle: 'white',
+            strokeStyle: 'white',
+            strokeWidth: 1
         });
     }
+}
 
+function find_node(nodes, id) {
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].id == id)
+            return nodes[i];
+    }
 }
 
 $(document).ready(function() {
-
+    var network = $('#network').data('networkObj');
+    generate_network(network);
 });
