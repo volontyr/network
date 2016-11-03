@@ -7,8 +7,16 @@ class NetworkController < ApplicationController
   end
 
   def index
-    @network_json = @@builder.network.to_json
     @network = @@builder.network
+  end
+
+  # saves nodes' coordinates on canvas
+  def network_update
+    if (network = params[:network])
+      network = JSON.load(network)
+      @@builder.network.nodes = network['nodes']
+      Node.num = @@builder.network.nodes.size
+    end
   end
 
   def create
@@ -22,9 +30,6 @@ class NetworkController < ApplicationController
       @@builder = NetworkBuilder.new(nodes_number, avg_channels_num)
       @@builder.network_generator = NetworkRandomGenerator.new
       @@builder.generate_network
-      # @@network = @@builder.network.to_json
-      # puts JSON.load(JSON.dump(builder.network))
-      # puts Oj.dump(builder.network, indent: 2)
       redirect_to network_path
     end
   end

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'network/new'
   post '/create'                => 'network#create'
   get 'network'                 => 'network#index'
+  post 'network/update'         => 'network#network_update'
   post 'network/add_node'       => 'network#add_node'
   post 'network/remove_node'    => 'network#remove_node'
   post 'network/add_channel'    => 'network#add_channel'

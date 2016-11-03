@@ -29,7 +29,7 @@ function generate_network(network) {
         var second_node = channels[i].second_node;
         $myCanvas.drawLine({
             layer: true,
-            name: "channel" + first_node + second_node,
+            name: first_node + "channel" + second_node,
             strokeStyle: "black",
             strokeWidth: 2,
             draggable: true,
@@ -54,15 +54,17 @@ function generate_network(network) {
             shadowColor: 'rgba(0, 0, 0, 0.8)',
             drag: function(layer) {
                 var layerName = layer.name;
+                console.log(layerName.match(/\d+/)[0]);
                 nodes[layerName.match(/\d+/)[0]].coord_x = layer.x;
                 nodes[layerName.match(/\d+/)[0]].coord_y = layer.y;
                 nodes[layerName.match(/\d+/)[0]].channels.forEach(function (channel) {
-                    var channelName = "channel" + channel.first_node + channel.second_node;
+                    var channelName = channel.first_node + "channel" + channel.second_node;
                     $myCanvas.getLayer(channelName).x1 = find_node(nodes, channel.first_node).coord_x;
                     $myCanvas.getLayer(channelName).y1 = find_node(nodes, channel.first_node).coord_y;
                     $myCanvas.getLayer(channelName).x2 = find_node(nodes, channel.second_node).coord_x;
                     $myCanvas.getLayer(channelName).y2 = find_node(nodes, channel.second_node).coord_y;
                 });
+                network.data.nodes = nodes;
             }
         }).drawText({
             layer: true,
@@ -91,5 +93,16 @@ $(document).ready(function() {
 
     $('.dropdown-menu').on('click', function(event) {
         event.stopPropagation();
+    });
+
+    $("#update_network").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/network/update",
+            data: { network : JSON.stringify(network.data) },
+            success: function() {
+                return true;
+            },
+        });
     });
 });
