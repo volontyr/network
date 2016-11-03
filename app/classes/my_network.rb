@@ -36,8 +36,8 @@ class MyNetwork
 
   def self.json_create(o)
     net_from_json = new
-    net_from_json.nodes = o['nodes']
-    net_from_json.channels = o['channels']
+    net_from_json.nodes = o['data']['nodes']
+    net_from_json.channels = o['data']['channels']
     net_from_json
   end
 end

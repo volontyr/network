@@ -47,9 +47,9 @@ class Node
 
   def self.json_create(o)
     node_from_json = new
-    node_from_json.id = o['id']
-    node_from_json.coord_x = o['coord_x']
-    node_from_json.coord_y = o['coord_y']
+    node_from_json.id = o['id'].to_i
+    node_from_json.coord_x = o['coord_x'].to_f
+    node_from_json.coord_y = o['coord_y'].to_f
     node_from_json.channels = o['channels']
     node_from_json
   end

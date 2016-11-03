@@ -61,11 +61,11 @@ class Channel
 
   def self.json_create(o)
     channel_from_json = new
-    channel_from_json.weight = o['weight']
-    channel_from_json.error_prob = o['error_prob']
+    channel_from_json.weight = o['weight'].to_i
+    channel_from_json.error_prob = o['error_prob'].to_f
     channel_from_json.type = o['type'].to_sym
-    channel_from_json.first_node = o['first_node']
-    channel_from_json.second_node = o['second_node']
+    channel_from_json.instance_variable_set(:@first_node, o['first_node'].to_i)
+    channel_from_json.instance_variable_set(:@second_node, o['second_node'].to_i)
     channel_from_json
   end
 
