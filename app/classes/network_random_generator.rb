@@ -1,11 +1,4 @@
-require_relative 'coordinates_circle_calculator'
-
 class NetworkRandomGenerator
-  attr_accessor :calculator
-
-  def initialize
-    @calculator = CoordinatesCircleCalculator.new
-  end
 
   def generate(builder, nodes_number, avg_channels_num)
     add_nodes(builder, nodes_number)
@@ -14,17 +7,16 @@ class NetworkRandomGenerator
     (0...2 * avg_channels_num.floor).each do |i|
       ind_1 = (i >= nodes_number) ? i % nodes_number : i
       ind_2 = (i + 1 >= nodes_number) ? (i + 1) % nodes_number : i + 1
-      add_channel(builder, nodes[ind_1], nodes[ind_2])
+      builder.add_random_channel(:duplex, nodes[ind_1], nodes[ind_2])
       break if ind_2 == 0
     end
 
-    nodes_len = builder.network.nodes.size
     builder.network.nodes.each do |node|
       if node.channels.empty?
         begin
-          rand_ind = rand(0...nodes_len)
+          rand_ind = rand(0...nodes_number)
         end while builder.network.nodes[rand_ind].channels.empty?
-        add_channel(builder, node, builder.network.nodes[rand_ind])
+        builder.add_random_channel(:duplex, node, builder.network.nodes[rand_ind])
       end
     end
 
@@ -33,32 +25,25 @@ class NetworkRandomGenerator
 
     (channels_num_must_be.to_i - channels_num.to_i).times do
       begin
-        rand_ind_1 = rand(0...nodes_len)
-        rand_ind_2 = rand(0...nodes_len)
+        rand_ind_1 = rand(0...nodes_number)
+        rand_ind_2 = rand(0...nodes_number)
         condition = (builder.network.nodes[rand_ind_1].channels &
             builder.network.nodes[rand_ind_2].channels != [] || rand_ind_1 == rand_ind_2)
       end while condition
-      add_channel(builder, builder.network.nodes[rand_ind_1], builder.network.nodes[rand_ind_2])
+      builder.add_random_channel(:duplex, builder.network.nodes[rand_ind_1], builder.network.nodes[rand_ind_2])
     end
-
   end
 
   private
     def add_nodes(builder, nodes_number)
+      calculator = builder.coordinates_calculator
       calculator.nodes_number = nodes_number
       x = calculator.initial_x
       y = calculator.calculate_y(x)
       (1..nodes_number).each do
         builder.add_node(x, y)
-          x = @calculator.calculate_x(x)
-          y = @calculator.calculate_y(x)
+          x = calculator.calculate_x(x)
+          y = calculator.calculate_y(x)
       end
-    end
-
-    def add_channel(builder, node_1, node_2)
-      weights_len = builder.network.channel_weights.size
-      weight = builder.network.channel_weights[rand(0...weights_len)]
-      error_prob = rand(0..99) / 100
-      builder.add_channel(weight, error_prob, :duplex, node_1, node_2)
     end
 end

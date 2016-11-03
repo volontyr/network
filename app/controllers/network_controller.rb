@@ -31,13 +31,13 @@ class NetworkController < ApplicationController
 
   def add_node
     if (node_id = params[:node].to_i)
-      new_node = @@builder.add_node(50, 50)
+      coord_x = @@builder.coordinates_calculator.last_coord_x
+      coord_x = @@builder.coordinates_calculator.calculate_x(coord_x)
+      coord_y = @@builder.coordinates_calculator.calculate_y(coord_x)
+      new_node = @@builder.add_node(coord_x, coord_y)
       existed_node = @@builder.network.find_node(node_id)
 
-      weights_len = @@builder.network.channel_weights.size
-      weight = @@builder.network.channel_weights[rand(0...weights_len)]
-      error_prob = rand(0..99) / 100
-      @@builder.add_channel(weight, error_prob, :duplex, new_node, existed_node)
+      @@builder.add_random_channel(:duplex, new_node, existed_node)
     end
     redirect_to network_path
   end
@@ -62,10 +62,7 @@ class NetworkController < ApplicationController
         existed_node_1 = @@builder.network.find_node(node_id_1)
         existed_node_2 = @@builder.network.find_node(node_id_2)
 
-        weights_len = @@builder.network.channel_weights.size
-        weight = @@builder.network.channel_weights[rand(0...weights_len)]
-        error_prob = rand(0..99) / 100
-        @@builder.add_channel(weight, error_prob, :duplex, existed_node_1, existed_node_2)
+        @@builder.add_random_channel(:duplex, existed_node_1, existed_node_2)
       end
     end
     redirect_to network_path

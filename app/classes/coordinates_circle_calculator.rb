@@ -1,21 +1,17 @@
-class CoordinatesCircleCalculator
-  attr_accessor :nodes_number
+require_relative 'coordinates_calculator'
+
+class CoordinatesCircleCalculator < CoordinatesCalculator
 
   def initialize
-    @nodes_number = 1
     @param_a = 600
     @param_b = 300
     @p = 1
     @radius = 250
-    @step = 2 * @radius / @nodes_number - 10
+    super
   end
 
   def initial_x
     @param_a - @radius
-  end
-
-  def calculate_x(old_x)
-    old_x + @step
   end
 
   def calculate_y(x)

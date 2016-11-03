@@ -1,8 +1,9 @@
 require_relative 'my_network'
 require_relative 'channel_creator'
+require_relative 'coordinates_ellipse_calculator'
 
 class NetworkBuilder
-  attr_accessor :network_generator, :channel_creator
+  attr_accessor :network_generator, :channel_creator, :coordinates_calculator
 
   def initialize(nodes_number=0, average_channels_num=0)
     @network = MyNetwork.new
@@ -10,6 +11,7 @@ class NetworkBuilder
     @network.average_channels_num = average_channels_num
     @network.channel_weights = [2, 4, 5, 7, 8, 12, 15, 17, 18, 22, 25, 32]
     @network_generator = nil
+    @coordinates_calculator = CoordinatesEllipseCalculator.new
   end
 
   # adds node to the network and returns its instance
@@ -52,6 +54,13 @@ class NetworkBuilder
       (c.first_node == node_id_1 and c.second_node == node_id_2) or
           (c.first_node == node_id_2 and c.second_node == node_id_1)
     end
+  end
+
+  def add_random_channel(type= :duplex, first_node=nil, second_node=nil, channel_type= :usual)
+    weights_len = @network.channel_weights.size
+    weight = @network.channel_weights[rand(0...weights_len)]
+    error_prob = (rand(0..99) / 100).to_f
+    add_channel(weight, error_prob, type, first_node, second_node, channel_type)
   end
 
   def generate_network

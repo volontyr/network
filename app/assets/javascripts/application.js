@@ -31,7 +31,7 @@ function generate_network(network) {
             layer: true,
             name: "channel" + first_node + second_node,
             strokeStyle: "black",
-            strokeWidth: 5,
+            strokeWidth: 2,
             draggable: true,
             x1: find_node(nodes, first_node).coord_x, y1: find_node(nodes, first_node).coord_y,
             x2: find_node(nodes, second_node).coord_x, y2: find_node(nodes, second_node).coord_y
@@ -54,9 +54,9 @@ function generate_network(network) {
             shadowColor: 'rgba(0, 0, 0, 0.8)',
             drag: function(layer) {
                 var layerName = layer.name;
-                nodes[parseInt(layerName.slice(-1))].coord_x = layer.x;
-                nodes[parseInt(layerName.slice(-1))].coord_y = layer.y;
-                nodes[parseInt(layerName.slice(-1))].channels.forEach(function (channel) {
+                nodes[layerName.match(/\d+/)[0]].coord_x = layer.x;
+                nodes[layerName.match(/\d+/)[0]].coord_y = layer.y;
+                nodes[layerName.match(/\d+/)[0]].channels.forEach(function (channel) {
                     var channelName = "channel" + channel.first_node + channel.second_node;
                     $myCanvas.getLayer(channelName).x1 = find_node(nodes, channel.first_node).coord_x;
                     $myCanvas.getLayer(channelName).y1 = find_node(nodes, channel.first_node).coord_y;
@@ -88,4 +88,8 @@ function find_node(nodes, id) {
 $(document).ready(function() {
     var network = $('#network').data('networkObj');
     generate_network(network);
+
+    $('.dropdown-menu').on('click', function(event) {
+        event.stopPropagation();
+    });
 });

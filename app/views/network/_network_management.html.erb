@@ -12,7 +12,11 @@
     <%= render partial: 'form_for_channel', :locals => {action: '/network/remove_channel',
                                             button_name: 'Remove channel', button_class: 'danger'} %>
 
-    <button class="btn btn-default" onclick="generate_network(<%= @network_json %>)" type="submit">
-        Generate network
-    </button>
+    <%= button_to 'Generate network', {:controller => 'network', :action => 'create'},
+                  params: { :nodes_number => @network.nodes_number,
+                            :average_channels_num => @network.average_channels_num },
+                  class: 'btn btn-default' %>
+    <!--<button class="btn btn-default" onclick="generate_network(<%= @network_json %>)" type="submit">-->
+        <!--Generate network-->
+    <!--</button>-->
 <% end %>
