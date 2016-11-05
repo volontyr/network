@@ -5,7 +5,17 @@
   <ul class="dropdown-menu">
     <li>
       <%= form_tag(action, method: 'post') do %>
-          Choose nodes to add channel to <br>
+          <% if action.include?('add_channel') %>
+              <%= label_tag :weight, 'Weight' %><br>
+              <%= select_tag :weight, options_for_select(@network.channel_weights) %>
+              <%= label_tag :error_prob, 'Probability of error'  %><br>
+              <%= number_field_tag :error_prob, nil, :step => :any, min: 0, max: 1 %><br>
+              <%= label_tag :type, 'Channel type' %><br>
+              <%= select_tag :type, options_for_select([:duplex, :half_duplex]) %>
+              <%= label_tag :connection_type, 'Connection type' %><br>
+              <%= select_tag :connection_type, options_for_select([:usual, :satellite]) %>
+          <% end %>
+          <strong>Nodes</strong> <br>
           <%= select_tag :node_1, options_for_select(@network.nodes.collect{ |n| n.id }) %><br>
           <%= select_tag :node_2, options_for_select(@network.nodes.collect{ |n| n.id }) %>
           <%= submit_tag('Submit', class: "btn btn-#{button_class}") %>

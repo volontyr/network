@@ -53,7 +53,7 @@ describe 'Network' do
     expect(builder.network.channels.size).to eq(channels_all - channels_of_node_3)
   end
 
-  it "raises exception if id doesn't exist" do
+  it "raises exception if node with such id doesn't exist while removing" do
     builder = NetworkBuilder.new(5, 4)
     builder.network_generator = NetworkRandomGenerator.new
     builder.generate_network
@@ -70,6 +70,16 @@ describe 'Network' do
     network = builder.network
     expect(network.nodes.size).to eq(2)
     expect(network.channels.size).to eq(0)
+  end
+
+  it "can update channel's parameters" do
+    node_1 = builder.add_node(0, 0)
+    node_2 = builder.add_node(5, 5)
+    channel = builder.add_channel(10, 0.15, :duplex, node_1, node_2)
+    builder.update_channel(node_1.id, node_2.id, 17, 0.17, :half_duplex)
+    expect(channel.weight).to eq(17)
+    expect(channel.error_prob).to eq(0.17)
+    expect(channel.type).to eq(:half_duplex)
   end
 
 end

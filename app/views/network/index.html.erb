@@ -4,3 +4,16 @@
 
 <%= content_tag "div", id: "network", data: {network_obj: @network } do %>
 <% end %>
+
+<!-- window with channel's info -->
+<div id="modal_form">
+  <span id="modal_close">X</span>
+  <%= label_tag :weight, 'Weight' %><br>
+  <%= select_tag :weight, options_for_select(@network.channel_weights) %>
+  <%= label_tag :error_prob, 'Probability of error'  %><br>
+  <%= number_field_tag :error_prob, nil, :step => :any, min: 0, max: 1 %><br>
+  <%= label_tag :type, 'Channel type' %><br>
+  <%= select_tag :type, options_for_select([:duplex, :half_duplex]) %><br>
+  <button type="submit" id="update_channel" class="btn btn-success">Update channel</button>
+</div>
+<div id="overlay"></div><!-- Пoдлoжкa -->

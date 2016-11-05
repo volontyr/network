@@ -67,7 +67,20 @@ class NetworkController < ApplicationController
         existed_node_1 = @@builder.network.find_node(node_id_1)
         existed_node_2 = @@builder.network.find_node(node_id_2)
 
-        @@builder.add_random_channel(:duplex, existed_node_1, existed_node_2)
+        weight = params[:weight].to_i
+        error_prob = params[:error_prob].to_f
+        type = params[:type].to_sym
+        connection_type = params[:connection_type].to_sym
+        if [weight, error_prob, type, connection_type].include?(nil)
+          connection_type = :usual if connection_type.nil?
+          channel = @@builder.add_random_channel(:duplex, existed_node_1, existed_node_2, connection_type)
+          channel.weight = weight unless weight.nil?
+          channel.error_prob = error_prob unless error_prob.nil?
+          channel.type = type unless type.nil?
+        else
+          @@builder.add_channel(weight, error_prob, type, existed_node_1, existed_node_2, connection_type)
+        end
+
       end
     end
     redirect_to network_path
@@ -76,17 +89,25 @@ class NetworkController < ApplicationController
   def remove_channel
     node_id_1 = params[:node_1].to_i
     node_id_2 = params[:node_2].to_i
-    channels = @@builder.network.channels
     if node_id_1 and node_id_2
       if node_id_1 == node_id_2
         flash[:danger] = 'Nodes must differ from each other'
-      elsif channels.any? {|c| [c.first_node, c.second_node].to_set == [node_id_1, node_id_2].to_set}
+      elsif !@@builder.network.find_channel(node_id_1, node_id_2).nil?
         @@builder.remove_channel(node_id_1, node_id_2)
       else
         flash[:danger] = "There's no channel between these nodes"
       end
     end
     redirect_to network_path
+  end
+
+  def update_channel
+    node_1 = params[:first_node].to_i
+    node_2 = params[:second_node].to_i
+    weight = params[:weight].to_i
+    error_prob = params[:error_prob].to_f
+    type = params[:type].to_sym
+    @@builder.update_channel(node_1, node_2, weight, error_prob, type)
   end
 
   private

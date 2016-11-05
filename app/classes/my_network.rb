@@ -23,6 +23,17 @@ class MyNetwork
     found_node
   end
 
+  def find_channel(node_id_1, node_id_2)
+    found_channel = nil
+    @channels.each do |channel|
+      if [channel.first_node, channel.second_node].to_set == [node_id_1, node_id_2].to_set
+        found_channel = channel
+        break
+      end
+    end
+    found_channel
+  end
+
   def to_json(*a)
     as_json.to_json(*a)
   end

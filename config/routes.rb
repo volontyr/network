@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post 'network/remove_node'    => 'network#remove_node'
   post 'network/add_channel'    => 'network#add_channel'
   post 'network/remove_channel' => 'network#remove_channel'
+  post 'network/update_channel' => 'network#update_channel'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

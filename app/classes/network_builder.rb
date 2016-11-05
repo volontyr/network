@@ -59,8 +59,17 @@ class NetworkBuilder
   def add_random_channel(type= :duplex, first_node=nil, second_node=nil, channel_type= :usual)
     weights_len = @network.channel_weights.size
     weight = @network.channel_weights[rand(0...weights_len)]
-    error_prob = (rand(0..99) / 100).to_f
+    error_prob = rand(0...1.0)
     add_channel(weight, error_prob, type, first_node, second_node, channel_type)
+  end
+
+  def update_channel(node_1, node_2, weight, error_prob, type)
+    channel = @network.find_channel(node_1, node_2)
+    unless channel.nil?
+      channel.weight = weight
+      channel.error_prob = error_prob
+      channel.type = type
+    end
   end
 
   def generate_network
