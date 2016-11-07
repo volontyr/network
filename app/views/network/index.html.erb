@@ -14,6 +14,9 @@
   <%= number_field_tag :error_prob, nil, :step => :any, min: 0, max: 1 %><br>
   <%= label_tag :type, 'Channel type' %><br>
   <%= select_tag :type, options_for_select([:duplex, :half_duplex]) %><br>
+  <%= label_tag :connection_type, 'Connection type' %><br>
+  <%= text_field_tag :connection_type, '', disabled: true %>
   <button type="submit" id="update_channel" class="btn btn-success">Update channel</button>
+  <button type="submit" id="delete_channel" class="btn btn-danger">Delete channel</button>
 </div>
 <div id="overlay"></div><!-- Пoдлoжкa -->

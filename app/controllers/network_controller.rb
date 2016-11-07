@@ -98,7 +98,6 @@ class NetworkController < ApplicationController
         flash[:danger] = "There's no channel between these nodes"
       end
     end
-    redirect_to network_path
   end
 
   def update_channel

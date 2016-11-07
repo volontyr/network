@@ -9,9 +9,6 @@
     <%= render partial: 'form_for_channel', :locals => {action: '/network/add_channel',
                                             button_name: 'Add channel', button_class: 'success'} %>
 
-    <%= render partial: 'form_for_channel', :locals => {action: '/network/remove_channel',
-                                            button_name: 'Remove channel', button_class: 'danger'} %>
-
     <%= button_to 'Generate network', {:controller => 'network', :action => 'create'},
                   params: { :nodes_number => @network.nodes_number,
                             :average_channels_num => @network.average_channels_num },

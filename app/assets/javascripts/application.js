@@ -46,6 +46,7 @@ function generate_network(network) {
                 modal_window.find('#weight').val(channel.weight);
                 modal_window.find('#error_prob').val(channel.error_prob);
                 modal_window.find('#type').val(channel.type);
+                modal_window.find('#connection_type').val(channel.json_class);
                 $('#overlay').fadeIn(100, function() {
                     $('#modal_form')
                         .css('display', 'block')
@@ -55,6 +56,12 @@ function generate_network(network) {
                 $('#update_channel').on("click", function() {
                     close_modal_window();
                     update_channel(channel);
+                    location.reload();
+                });
+
+                $('#delete_channel').on("click", function() {
+                    close_modal_window();
+                    delete_channel(channel);
                     location.reload();
                 });
             },
@@ -162,6 +169,20 @@ function update_channel(channel) {
             weight      : $("#modal_form").find("#weight").val(),
             error_prob  : $("#modal_form").find("#error_prob").val(),
             type        : $("#modal_form").find("#type").val()
+        },
+        success: function() {
+            return true;
+        },
+    });
+}
+
+function delete_channel(channel) {
+    $.ajax({
+        type: "POST",
+        url: "/network/remove_channel",
+        data: {
+            node_1  : channel.first_node,
+            node_2 : channel.second_node,
         },
         success: function() {
             return true;
