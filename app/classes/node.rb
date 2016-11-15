@@ -1,7 +1,7 @@
 require 'json'
 
 class Node
-  attr_accessor :id, :channels, :coord_x, :coord_y
+  attr_accessor :id, :channels, :coord_x, :coord_y, :routes_table, :routes_lengths_table
   @@num = 0
 
   def initialize(coord_x = 0, coord_y = 0)
@@ -10,6 +10,8 @@ class Node
     @coord_x = coord_x
     @coord_y = coord_y
     @channels = []
+    @routes_table = {}
+    @routes_lengths_table = {}
   end
 
   def add_channel(value)

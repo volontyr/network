@@ -30,6 +30,7 @@ class NetworkController < ApplicationController
       @@builder = NetworkBuilder.new(nodes_number, avg_channels_num)
       @@builder.network_generator = NetworkRandomGenerator.new
       @@builder.generate_network
+      RoutesFinder.new(@@builder.network).find_routes
       redirect_to network_path
     end
   end

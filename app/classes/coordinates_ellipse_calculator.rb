@@ -27,6 +27,6 @@ class CoordinatesEllipseCalculator < CoordinatesCalculator
 
   def nodes_number=(value)
     @nodes_number = value
-    @step = 2 * @param_a / (@nodes_number + 1) - 10
+    @step = 2 * @param_a / (@nodes_number + 5) - 10
   end
 end

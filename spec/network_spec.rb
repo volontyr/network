@@ -3,6 +3,7 @@ require_relative '../app/classes/network_builder'
 require_relative '../app/classes/node'
 require_relative '../app/classes/channel'
 require_relative '../app/classes/network_random_generator'
+require_relative '../app/classes/routes_finder'
 
 describe 'Network' do
   let(:builder) { NetworkBuilder.new }
@@ -80,6 +81,30 @@ describe 'Network' do
     expect(channel.weight).to eq(17)
     expect(channel.error_prob).to eq(0.17)
     expect(channel.type).to eq(:half_duplex)
+  end
+
+  it 'create routes tables for each node' do
+    Node.num = 0
+    node_1 = builder.add_node(0, 0)
+    node_2 = builder.add_node(5, 5)
+    node_3 = builder.add_node(0, 0)
+    node_4 = builder.add_node(5, 5)
+    node_5 = builder.add_node(0, 0)
+    builder.add_channel(1, 0.1, :duplex, node_1, node_2)
+    builder.add_channel(3, 0.1, :duplex, node_2, node_3)
+    builder.add_channel(2, 0.1, :duplex, node_3, node_4)
+    builder.add_channel(3, 0.1, :duplex, node_4, node_5)
+    builder.add_channel(5, 0.1, :duplex, node_1, node_5)
+    builder.add_channel(5, 0.1, :duplex, node_1, node_3)
+    builder.add_channel(4, 0.1, :duplex, node_4, node_2)
+    routes_finder = RoutesFinder.new(builder.network)
+    routes_finder.find_routes
+    expect(builder.network.nodes[0].routes_table['1']).to eq([1])
+    expect(builder.network.nodes[0].routes_table['2']).to eq([1, 2])
+    expect(builder.network.nodes[0].routes_table['3']).to eq([1, 3])
+    expect(builder.network.nodes[0].routes_table['4']).to eq([4])
+    expect(builder.network.nodes[2].routes_table['0']).to eq([1, 0])
+    expect(builder.network.nodes[3].routes_table['0']).to eq([1, 0])
   end
 
 end

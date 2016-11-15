@@ -39,6 +39,8 @@ GEM
     arel (6.0.3)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap-sass (3.2.0.0)
+      sass (~> 3.2)
     builder (3.2.2)
     byebug (9.0.6)
     coffee-rails (4.1.1)
@@ -76,6 +78,8 @@ GEM
     multi_json (1.12.1)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
+    oj (2.17.5)
+    oj_mimic_json (1.0.1)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -162,10 +166,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootstrap-sass (~> 3.2.0)
   byebug
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
+  oj
+  oj_mimic_json
   rails (= 4.2.6)
   rspec-core
   rspec-rails
