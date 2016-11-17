@@ -23,6 +23,17 @@ class MyNetwork
     found_node
   end
 
+  def central_node
+    found_node = nil
+    @nodes.each do |node|
+      if node.type == :central
+        found_node = node
+        break
+      end
+    end
+    found_node
+  end
+
   def find_channel(node_id_1, node_id_2)
     found_channel = nil
     @channels.each do |channel|

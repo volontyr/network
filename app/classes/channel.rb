@@ -1,15 +1,20 @@
 require 'json'
 
 class Channel
-  attr_accessor :type, :weight, :error_prob, :first_node, :second_node
+  attr_accessor :type, :weight, :error_prob, :first_node, :second_node,
+                :first_buffer, :second_buffer, :is_busy, :is_active
   attr_reader :time_coefficient
 
   def initialize(weight = 0, error_prob = 0, type = :duplex)
     self.type = type
     self.weight = weight
     self.error_prob = error_prob
+    @is_busy = false
+    @is_active = true
     @first_node = nil
     @second_node = nil
+    @first_buffer = []
+    @second_buffer = []
   end
 
   def type=(value)
@@ -45,6 +50,20 @@ class Channel
 
   def set_time_coefficient(coefficient)
     @time_coefficient = coefficient
+  end
+
+  def has_message?(message)
+    [@first_buffer, @second_buffer].include?(message)
+  end
+
+  def get_buffer_by_node(node_id)
+    if node_id == @first_node
+      @first_buffer
+    elsif node_id == @second_node
+      return @second_buffer
+    else
+      nil
+    end
   end
 
   def to_json(*a)
