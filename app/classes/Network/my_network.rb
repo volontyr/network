@@ -1,8 +1,9 @@
 require 'json'
 
 class MyNetwork
+
   attr_accessor :nodes, :channels, :nodes_number, :average_channels_num,
-                :channel_weights
+                :channel_weights, :message_sending_mode, :is_initialized
 
   def initialize
     @nodes = []
@@ -10,7 +11,10 @@ class MyNetwork
     @channel_weights = []
     @nodes_number = 0
     @average_channels_num = 0
+    @message_sending_mode = :datagram_mode
+    @is_initialized = false
   end
+
 
   def find_node(node_id)
     found_node = nil
@@ -23,6 +27,7 @@ class MyNetwork
     found_node
   end
 
+
   def central_node
     found_node = nil
     @nodes.each do |node|
@@ -33,6 +38,7 @@ class MyNetwork
     end
     found_node
   end
+
 
   def find_channel(node_id_1, node_id_2)
     found_channel = nil
@@ -45,6 +51,19 @@ class MyNetwork
     found_channel
   end
 
+
+  def has_messages?
+    return_value = false
+    @channels.each do |channel|
+      if !channel.first_buffer.empty? or !channel.second_buffer.empty?
+        return_value = true
+        break
+      end
+    end
+    return_value
+  end
+
+
   def to_json(*a)
     as_json.to_json(*a)
   end
@@ -55,6 +74,7 @@ class MyNetwork
         data: { nodes: @nodes.map(&:as_json), channels: @channels.map(&:as_json) }
     }
   end
+
 
   def self.json_create(o)
     net_from_json = new

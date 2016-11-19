@@ -1,8 +1,8 @@
 require 'rspec/core'
-require_relative '../app/classes/network_builder'
+require_relative '../app/classes/Network/network_builder'
 require_relative '../app/classes/node'
 require_relative '../app/classes/channel'
-require_relative '../app/classes/network_random_generator'
+require_relative '../app/classes/Network/network_random_generator'
 require_relative '../app/classes/routes_finder'
 
 describe 'Network' do

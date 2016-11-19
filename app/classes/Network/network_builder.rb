@@ -1,6 +1,6 @@
 require_relative 'my_network'
-require_relative 'channel_creator'
-require_relative 'coordinates_ellipse_calculator'
+require_relative '../../../app/classes/channel_creator'
+require_relative '../../../app/classes/coordinates_ellipse_calculator'
 
 class NetworkBuilder
   attr_accessor :network_generator, :channel_creator, :coordinates_calculator

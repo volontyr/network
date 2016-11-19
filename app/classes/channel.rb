@@ -1,6 +1,7 @@
 require 'json'
 
 class Channel
+
   attr_accessor :type, :weight, :error_prob, :first_node, :second_node,
                 :first_buffer, :second_buffer, :is_busy, :is_active
   attr_reader :time_coefficient
@@ -17,10 +18,12 @@ class Channel
     @second_buffer = []
   end
 
+
   def type=(value)
     raise ArgumentError, 'Argument is wrong' unless [:duplex, :half_duplex].include?(value)
     @type = value
   end
+
 
   def weight=(value)
     raise ArgumentError,
@@ -28,11 +31,13 @@ class Channel
     @weight = value
   end
 
+
   def error_prob=(value)
     raise ArgumentError,
           'Argument is wrong' unless value.is_a?(Numeric) and value >= 0 and value <= 1
     @error_prob = value
   end
+
 
   def first_node=(value)
     raise 'Node must differ from another one' unless value.id != @second_node
@@ -41,6 +46,7 @@ class Channel
     value.add_channel(self) unless value.channels.include?(self)
   end
 
+
   def second_node=(value)
     raise 'Node must differ from another one' unless value.id != @first_node
     raise ArgumentError, 'Argument must be Node type' unless value.is_a?(Node)
@@ -48,13 +54,16 @@ class Channel
     value.add_channel(self) unless value.channels.include?(self)
   end
 
+
   def set_time_coefficient(coefficient)
     @time_coefficient = coefficient
   end
 
+
   def has_message?(message)
     [@first_buffer, @second_buffer].include?(message)
   end
+
 
   def get_buffer_by_node(node_id)
     if node_id == @first_node
@@ -66,9 +75,11 @@ class Channel
     end
   end
 
+
   def to_json(*a)
     as_json.to_json(*a)
   end
+
 
   def as_json(options = {})
     {
@@ -77,6 +88,7 @@ class Channel
         first_node: @first_node, second_node: @second_node
     }
   end
+
 
   def self.json_create(o)
     channel_from_json = new
