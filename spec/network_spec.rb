@@ -107,4 +107,14 @@ describe 'Network' do
     expect(builder.network.nodes[3].routes_table['0']).to eq([1, 0])
   end
 
+  it 'has one central (main) node' do
+    builder = NetworkBuilder.new(5, 4)
+    builder.network_generator = NetworkRandomGenerator.new
+    builder.generate_network
+    node = builder.network.central_node
+    expect(node.nil?).to eq false
+    central_node = builder.network.nodes.reject { |n| n.type == :usual }
+    expect(central_node.size).to eq(1)
+  end
+
 end
