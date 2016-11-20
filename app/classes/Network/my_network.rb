@@ -13,6 +13,7 @@ class MyNetwork
     @average_channels_num = 0
     @message_sending_mode = :datagram_mode
     @is_initialized = false
+    @messages_stack = MessagesStack.new
   end
 
 
@@ -64,9 +65,39 @@ class MyNetwork
   end
 
 
+  def established_connection?(node_id_1, node_id_2)
+    return_value = true
+    current_node_id = node_id_1
+    find_node(node_id_1.to_s).routes_table[node_id_2.to_s].each do |id|
+      unless find_channel(current_node_id, id).is_busy
+        return_value = false
+        break
+      end
+      current_node_id = id
+    end
+    return_value
+  end
+
+
+  def can_send?(node_id_1, node_id_2)
+    return_value = true
+    current_node_id = node_id_1
+    find_node(node_id_1.to_s).routes_table[node_id_2.to_s].each do |id|
+      unless find_channel(current_node_id, id).channel_buffer.empty?
+        return_value = false
+        break
+      end
+      current_node_id = id
+    end
+    return_value
+    established_connection? and return_value
+  end
+
+
   def to_json(*a)
     as_json.to_json(*a)
   end
+
 
   def as_json(options = {})
     {

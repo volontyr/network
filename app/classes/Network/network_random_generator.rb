@@ -33,7 +33,7 @@ class NetworkRandomGenerator
       builder.add_random_channel(:duplex, builder.network.nodes[rand_ind_1], builder.network.nodes[rand_ind_2])
     end
 
-    builder.network.nodes[ rand(0...nodes_number)].type = :central
+    builder.network.nodes[rand(0...nodes_number)].type = :central
   end
 
   private

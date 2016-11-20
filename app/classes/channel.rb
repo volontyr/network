@@ -3,7 +3,7 @@ require 'json'
 class Channel
 
   attr_accessor :type, :weight, :error_prob, :first_node, :second_node,
-                :first_buffer, :second_buffer, :is_busy, :is_active
+                :first_buffer, :second_buffer, :channel_buffer, :is_busy, :is_active
   attr_reader :time_coefficient
 
   def initialize(weight = 0, error_prob = 0, type = :duplex)
@@ -16,6 +16,7 @@ class Channel
     @second_node = nil
     @first_buffer = []
     @second_buffer = []
+    @channel_buffer = []
   end
 
 
