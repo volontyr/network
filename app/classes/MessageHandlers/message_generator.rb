@@ -57,7 +57,7 @@ class MessageGenerator
       message_size = 0
     end
 
-    message_initializer = MessageInitializer(message_size, Constants.service_size, message_type)
+    message_initializer = MessageInitializer.new(message_size, Constants.service_size, message_type)
     create_message(message_initializer, sender, receiver)
   end
 
@@ -68,10 +68,10 @@ class MessageGenerator
 
     while message_size > 0
       if message_size < Constants.packet_size
-        initializer = MessageInitializer(message_size, Constants.service_size,
+        initializer = MessageInitializer.new(message_size, Constants.service_size,
                                                  message_size.message_type)
       else
-        initializer = MessageInitializer(Constants.packet_size, Constants.service_size,
+        initializer = MessageInitializer.new(Constants.packet_size, Constants.service_size,
                                                  message_size.message_type)
       end
       small_message = Message.new(message.sender_node, message.receiver_node,
