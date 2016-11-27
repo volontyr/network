@@ -14,9 +14,21 @@
   <%= number_field_tag :error_prob, nil, :step => :any, min: 0, max: 1 %><br>
   <%= label_tag :type, 'Channel type' %><br>
   <%= select_tag :type, options_for_select([:duplex, :half_duplex]) %><br>
+  <%= label_tag :activity, 'Activity' %><br>
+  <%= select_tag :activity, options_for_select([:active, :non_active]) %><br>
   <%= label_tag :connection_type, 'Connection type' %><br>
   <%= text_field_tag :connection_type, '', disabled: true %>
   <button type="submit" id="update_channel" class="btn btn-success">Update channel</button>
   <button type="submit" id="delete_channel" class="btn btn-danger">Delete channel</button>
 </div>
 <div id="overlay"></div><!-- Пoдлoжкa -->
+
+<div id="node_info">
+  <span id="modal_close">X</span>
+  <%= label_tag :activity, 'Activity' %><br>
+  <%= select_tag :activity, options_for_select([:active, :non_active]) %><br>
+  <div id="routes_table"></div>
+  <button type="submit" id="update_node" class="btn btn-success">Update node</button>
+  <button type="submit" id="delete_node" class="btn btn-danger">Delete node</button>
+</div>
+<div id="overlay-2"></div><!-- Пoдлoжкa -->

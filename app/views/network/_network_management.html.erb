@@ -12,5 +12,9 @@
     <%= button_to 'Generate network', {:controller => 'network', :action => 'create'},
                   params: { :nodes_number => @network.nodes_number,
                             :average_channels_num => @network.average_channels_num },
-                  class: 'btn btn-default' %>
+                  class: 'btn btn-default' %><br>
+
+    <%= render partial: 'send_message', :locals => {action: '/network/send_message'} %>
+
+    <%= render partial: 'generate_messages', :locals => {action: '/network/generate_messages'} %>
 <% end %>

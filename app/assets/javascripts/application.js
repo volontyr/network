@@ -47,6 +47,7 @@ function generate_network(network) {
                 modal_window.find('#error_prob').val(channel.error_prob);
                 modal_window.find('#type').val(channel.type);
                 modal_window.find('#connection_type').val(channel.json_class);
+                modal_window.find('#activity').val(channel.activity);
                 $('#overlay').fadeIn(100, function() {
                     $('#modal_form')
                         .css('display', 'block')
@@ -56,13 +57,13 @@ function generate_network(network) {
                 $('#update_channel').on("click", function() {
                     close_modal_window();
                     update_channel(channel);
-                    location.reload();
+                    // location.reload(true);
                 });
 
                 $('#delete_channel').on("click", function() {
                     close_modal_window();
                     delete_channel(channel);
-                    location.reload();
+                    // location.reload(true);
                 });
             },
             mouseover: function (layer) {
@@ -119,7 +120,51 @@ function generate_network(network) {
             },
             dragstop: function() {
                 save_network_state(network);
-            }
+            },
+            contextmenu: function (layer) {
+                var node_id = layer.name.match(/\d+/g)[0];
+                var node = find_node(nodes, node_id);
+                var modal_window = $('#node_info');
+                var routes_table = "<strong>Routes</strong><br>";
+
+                for (var key in node.routes_table) {
+                   routes_table += "<strong>" + key + "</strong> :         ";
+                   for (var value in node.routes_table[key]) {
+                       routes_table += "  ->  " + node.routes_table[key][value];
+                   }
+                    routes_table += "<br>";
+                }
+
+                modal_window.find('#activity').val(node.activity);
+                modal_window.find('#routes_table').html(routes_table);
+                $('#overlay-2').fadeIn(100, function() {
+                    $('#node_info')
+                        .css('display', 'block')
+                        .animate({opacity: 1, top: '50%'}, 100);
+                });
+
+                $('#update_node').on("click", function() {
+                    $('#node_info').animate({opacity: 0, top: '45%'}, 100,
+                        function() {
+                            $(this).css('display', 'none');
+                            $('#overlay-2').fadeOut(200);
+                        }
+                    );
+                    update_node(node);
+                    // location.reload(true);
+                });
+
+                $('#delete_node').on("click", function() {
+                    $('#node_info').animate({opacity: 0, top: '45%'}, 100,
+                        function() {
+                            $(this).css('display', 'none');
+                            $('#overlay-2').fadeOut(200);
+                        }
+                    );
+                    delete_node(node);
+                    // location.reload(true);
+                });
+            },
         }).drawText({
             layer: true,
             groups: ["node_and_text" + i],
@@ -160,34 +205,86 @@ function save_network_state(network) {
 }
 
 function update_channel(channel) {
-    $.ajax({
-        type: "POST",
-        url: "/network/update_channel",
-        data: {
-            first_node  : channel.first_node,
-            second_node : channel.second_node,
-            weight      : $("#modal_form").find("#weight").val(),
-            error_prob  : $("#modal_form").find("#error_prob").val(),
-            type        : $("#modal_form").find("#type").val()
-        },
-        success: function() {
-            return true;
-        },
+    $.redirect('/network/update_channel', {
+        first_node  : channel.first_node,
+        second_node : channel.second_node,
+        weight      : $("#modal_form").find("#weight").val(),
+        error_prob  : $("#modal_form").find("#error_prob").val(),
+        type        : $("#modal_form").find("#type").val(),
+        activity    : $("#modal_form").find("#activity").val()
     });
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/network/update_channel",
+    //     data: {
+    //         first_node  : channel.first_node,
+    //         second_node : channel.second_node,
+    //         weight      : $("#modal_form").find("#weight").val(),
+    //         error_prob  : $("#modal_form").find("#error_prob").val(),
+    //         type        : $("#modal_form").find("#type").val(),
+    //         activity    : $("#modal_form").find("#activity").val()
+    //     },
+    //     success: function() {
+    //         // location.reload(true);
+    //         return true;
+    //     },
+    // });
 }
 
 function delete_channel(channel) {
-    $.ajax({
-        type: "POST",
-        url: "/network/remove_channel",
-        data: {
-            node_1  : channel.first_node,
-            node_2 : channel.second_node,
-        },
-        success: function() {
-            return true;
-        },
+    $.redirect('/network/remove_channel', {
+        node_1 : channel.first_node,
+        node_2 : channel.second_node,
     });
+
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/network/remove_channel",
+    //     data: {
+    //         node_1  : channel.first_node,
+    //         node_2 : channel.second_node,
+    //     },
+    //     success: function() {
+    //         // location.reload(true);
+    //         return true;
+    //     },
+    // });
+}
+
+function update_node(node) {
+    $.redirect('/network/update_node', {
+        node     : node.id,
+        activity : $("#node_info").find("#activity").val()
+    });
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/network/update_node",
+    //     data: {
+    //         node     : node.id,
+    //         activity : $("#node_info").find("#activity").val()
+    //     },
+    //     success: function() {
+    //         // location.reload(true);
+    //         return true;
+    //     },
+    // });
+}
+
+function delete_node(node) {
+    $.redirect('/network/remove_node', {
+        node  : node.id,
+    });
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/network/remove_node",
+    //     data: {
+    //         node  : node.id,
+    //     },
+    //     success: function() {
+    //         // location.reload(true);
+    //         return true;
+    //     },
+    // });
 }
 
 function close_modal_window() {
@@ -203,9 +300,24 @@ $(document).ready(function() {
     var network = $('#network').data('networkObj');
     generate_network(network);
 
+    // $(document).ajaxError( function(e, xhr, options){
+    //     if("500" == xhr.status) {
+    //         $(location).attr('href','/network');
+    //     }
+    // });
+
     $('.dropdown-menu').on('click', function(event) {
         event.stopPropagation();
     });
 
     $('#modal_close, #overlay').click(close_modal_window);
+
+    $('#node_info #modal_close, #overlay-2').click(function () {
+        $('#node_info').animate({opacity: 0, top: '45%'}, 100,
+            function () {
+                $(this).css('display', 'none');
+                $('#overlay-2').fadeOut(200);
+            }
+        );
+    });
 });
