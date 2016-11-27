@@ -6,10 +6,11 @@ class RoutesFinder
 
   def find_routes(network = nil)
     @network = network unless network.nil?
-    @network.nodes.each do |node|
+    @network.nodes.reject { |n| n.activity == :non_active }.each do |node|
+      node.routes_table = Hash.new
       marked_nodes = Hash.new
       nodes_labels = Hash.new
-      @network.nodes.each do |n|
+      @network.nodes.reject { |n| n.activity == :non_active }.each do |n|
         nodes_labels[n.id.to_s] = 1000000000
         marked_nodes[n.id.to_s] = false
         node.routes_table[n.id.to_s] = [] unless n == node
@@ -21,7 +22,8 @@ class RoutesFinder
         @network.find_node(current_node).channels.each do |c|
           next_node_id = (c.first_node == current_node) ? c.second_node : c.first_node
 
-          next if marked_nodes[next_node_id.to_s]
+          next if c.activity == :non_active or @network.find_node(next_node_id).activity == :non_active or
+                  marked_nodes[next_node_id.to_s]
 
           if nodes_labels[current_node.to_s] + c.weight < nodes_labels[next_node_id.to_s]
             nodes_labels[next_node_id.to_s] = nodes_labels[current_node.to_s] + c.weight

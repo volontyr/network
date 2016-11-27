@@ -3,7 +3,7 @@ require 'json'
 class Channel
 
   attr_accessor :type, :weight, :error_prob, :first_node, :second_node,
-                :first_buffer, :second_buffer, :channel_buffer, :is_busy, :is_active
+                :first_buffer, :second_buffer, :channel_buffer, :is_busy, :activity
   attr_reader :time_coefficient
 
   def initialize(weight = 0, error_prob = 0, type = :duplex)
@@ -11,7 +11,7 @@ class Channel
     self.weight = weight
     self.error_prob = error_prob
     @is_busy = false
-    @is_active = true
+    @activity = :active
     @first_node = nil
     @second_node = nil
     @first_buffer = []
@@ -62,7 +62,7 @@ class Channel
 
 
   def has_message?(message)
-    [@first_buffer, @second_buffer].include?(message)
+    (@first_buffer + @second_buffer).include?(message)
   end
 
 
@@ -85,7 +85,7 @@ class Channel
   def as_json(options = {})
     {
         json_class: self.class.name,
-        weight: @weight, error_prob: @error_prob, type: @type,
+        weight: @weight, error_prob: @error_prob, type: @type, activity: @activity,
         first_node: @first_node, second_node: @second_node
     }
   end
@@ -96,6 +96,7 @@ class Channel
     channel_from_json.weight = o['weight'].to_i
     channel_from_json.error_prob = o['error_prob'].to_f
     channel_from_json.type = o['type'].to_sym
+    channel_from_json.activity = o['activity'].to_sym
     channel_from_json.instance_variable_set(:@first_node, o['first_node'].to_i)
     channel_from_json.instance_variable_set(:@second_node, o['second_node'].to_i)
     channel_from_json

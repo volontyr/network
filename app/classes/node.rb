@@ -2,7 +2,7 @@ require 'json'
 
 class Node
   attr_accessor :id, :channels, :coord_x, :coord_y, :routes_table, :routes_lengths_table,
-                :type, :is_active
+                :type, :activity
   @@num = 0
 
   def initialize(coord_x=0, coord_y=0, type=:usual)
@@ -12,7 +12,7 @@ class Node
     @coord_y = coord_y
     @channels = []
     @type = type
-    @is_active = true
+    @activity = :active
     @routes_table = {}
   end
 
@@ -46,7 +46,7 @@ class Node
     {
         json_class: self.class.name,
         id: @id, coord_x: @coord_x, coord_y: @coord_y, channels: @channels.map(&:as_json),
-        routes_table: @routes_table
+        routes_table: @routes_table, activity: @activity
     }
   end
 
@@ -57,6 +57,7 @@ class Node
     node_from_json.coord_y = o['coord_y'].to_f
     node_from_json.channels = o['channels']
     node_from_json.routes_table = o['routes_table']
+    node_from_json.activity = o['activity']
     node_from_json
   end
 

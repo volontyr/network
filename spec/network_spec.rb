@@ -77,7 +77,7 @@ describe 'Network' do
     node_1 = builder.add_node(0, 0)
     node_2 = builder.add_node(5, 5)
     channel = builder.add_channel(10, 0.15, :duplex, node_1, node_2)
-    builder.update_channel(node_1.id, node_2.id, 17, 0.17, :half_duplex)
+    builder.update_channel(node_1.id, node_2.id, 17, 0.17, :half_duplex, channel.activity)
     expect(channel.weight).to eq(17)
     expect(channel.error_prob).to eq(0.17)
     expect(channel.type).to eq(:half_duplex)

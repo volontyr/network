@@ -41,9 +41,24 @@ class MessagesQueueHandler
 
   def next_message(buffer)
     if @network.message_sending_mode == :logical_connection
-      if @network.established_connection?(buffer[0].sender_node, buffer[0].receiver_node)
+      # if @network.established_connection?(buffer[0].sender_node, buffer[0].receiver_node)
+      #   return buffer[0]
+      # else
+      #   return MessageGenerator.new(@network).create_manage_message(
+      #             :request, buffer[0].sender_node, buffer[0].receiver_node
+      #          )
+      # end
+
+      if @node.id == buffer[0].receiver_node
+        return buffer[0]
+      end
+
+      next_channel = @network.find_channel(buffer[0].sender_node,
+                                           next_receiver_node(buffer[0].receiver_node))
+      if next_channel.is_busy
         return buffer[0]
       else
+        next_channel.is_busy = true
         return MessageGenerator.new(@network).create_manage_message(
                   :request, buffer[0].sender_node, buffer[0].receiver_node
                )
@@ -68,6 +83,8 @@ class MessagesQueueHandler
         buffer.insert(0, message)
       end
 
+      previous_buffer.delete(message) unless previous_buffer.nil?
+
       unless previous_buffer.nil? or message.type != :request
         previous_buffer.delete(message)
         if channel.is_busy
@@ -75,11 +92,12 @@ class MessagesQueueHandler
               :negative_response, @node.id, message.sender_node
           )
           buffer.delete(message)
-        else
-          receiver = @node.routes_table[message.sender_node.to_s][0]
-          MessageGenerator.new(@network).create_manage_message(
-              :positive_response, @node.id, receiver
-          )
+        # else
+          # receiver = @node.routes_table[message.sender_node.to_s][0]
+          # MessageGenerator.new(@network).create_manage_message(
+          #     :positive_response, @node.id, receiver
+          # )
+          # channel.is_busy = true
         end
       end
     end

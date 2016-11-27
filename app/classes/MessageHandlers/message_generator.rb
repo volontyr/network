@@ -29,18 +29,20 @@ class MessageGenerator
       receiver = @network.nodes[rand_ind].id
     end
 
-    message = Message.new(sender, receiver, initializer.message_size,
-                          initializer.service_size, initializer.message_type)
+    unless @network.find_node(sender).routes_table[receiver.to_s].empty?
+      message = Message.new(sender, receiver, initializer.message_size,
+                            initializer.service_size, initializer.message_type)
 
-    if @message_sending_mode == :datagram_mode and initializer.message_type == :info
-      divide_message_on_packets(message)
-    else
-      sender_node = @network.find_node(message.sender_node)
-      queue_handler = MessagesQueueHandler.new(sender_node, @network)
-      queue_handler.add_message_to_queue(message)
+      if @message_sending_mode == :datagram_mode and initializer.message_type == :info
+        divide_message_on_packets(message)
+      else
+        sender_node = @network.find_node(message.sender_node)
+        queue_handler = MessagesQueueHandler.new(sender_node, @network)
+        queue_handler.add_message_to_queue(message)
+      end
+
+      message
     end
-
-    message
   end
 
 
@@ -69,10 +71,10 @@ class MessageGenerator
     while message_size > 0
       if message_size < Constants.packet_size
         initializer = MessageInitializer.new(message_size, Constants.service_size,
-                                                 message_size.message_type)
+                                                 message.type)
       else
         initializer = MessageInitializer.new(Constants.packet_size, Constants.service_size,
-                                                 message_size.message_type)
+                                                 message.type)
       end
       small_message = Message.new(message.sender_node, message.receiver_node,
                                   initializer.message_size, initializer.service_size,

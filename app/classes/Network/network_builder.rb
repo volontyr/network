@@ -3,7 +3,7 @@ require_relative '../../../app/classes/channel_creator'
 require_relative '../../../app/classes/coordinates_ellipse_calculator'
 
 class NetworkBuilder
-  attr_accessor :network_generator, :channel_creator, :coordinates_calculator
+  attr_accessor :network_generator, :channel_creator, :coordinates_calculator, :network
 
   def initialize(nodes_number=0, average_channels_num=0)
     @network = MyNetwork.new
@@ -20,6 +20,20 @@ class NetworkBuilder
     node.add_channel(channel) unless channel.nil?
     @network.nodes << node
     node
+  end
+
+  # returns true if node's activity has been changed, else - false
+  def update_node(node_id, activity)
+    node = @network.find_node(node_id)
+    old_activity = node.activity
+    unless node.nil?
+      node.activity = activity
+    end
+    if old_activity == activity
+      false
+    else
+      true
+    end
   end
 
   def remove_node(node_id)
@@ -59,16 +73,24 @@ class NetworkBuilder
   def add_random_channel(type= :duplex, first_node=nil, second_node=nil, channel_type= :usual)
     weights_len = @network.channel_weights.size
     weight = @network.channel_weights[rand(0...weights_len)]
-    error_prob = rand(0...1.0)
+    error_prob = rand(0...0.1)
     add_channel(weight, error_prob, type, first_node, second_node, channel_type)
   end
 
-  def update_channel(node_1, node_2, weight, error_prob, type)
+  # returns true if channel's activity has been changed, else - false
+  def update_channel(node_1, node_2, weight, error_prob, type, activity)
     channel = @network.find_channel(node_1, node_2)
+    old_activity = channel.activity
     unless channel.nil?
       channel.weight = weight
       channel.error_prob = error_prob
       channel.type = type
+      channel.activity = activity
+    end
+    if old_activity == activity
+      false
+    else
+      true
     end
   end
 
