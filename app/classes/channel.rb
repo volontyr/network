@@ -3,8 +3,7 @@ require 'json'
 class Channel
 
   attr_accessor :type, :weight, :error_prob, :first_node, :second_node,
-                :first_buffer, :second_buffer, :channel_buffer, :is_busy, :activity
-  attr_reader :time_coefficient
+                :first_buffer, :second_buffer, :channel_buffer, :is_busy, :activity, :time_coefficient
 
   def initialize(weight = 0, error_prob = 0, type = :duplex)
     self.type = type
@@ -56,11 +55,6 @@ class Channel
   end
 
 
-  def set_time_coefficient(coefficient)
-    @time_coefficient = coefficient
-  end
-
-
   def has_message?(message)
     (@first_buffer + @second_buffer).include?(message)
   end
@@ -86,7 +80,8 @@ class Channel
     {
         json_class: self.class.name,
         weight: @weight, error_prob: @error_prob, type: @type, activity: @activity,
-        first_node: @first_node, second_node: @second_node
+        first_node: @first_node, second_node: @second_node, is_busy: @is_busy,
+        first_buffer: @first_buffer, second_buffer: @second_buffer, channel_buffer: @channel_buffer
     }
   end
 
@@ -99,6 +94,10 @@ class Channel
     channel_from_json.activity = o['activity'].to_sym
     channel_from_json.instance_variable_set(:@first_node, o['first_node'].to_i)
     channel_from_json.instance_variable_set(:@second_node, o['second_node'].to_i)
+    channel_from_json.is_busy = o['is_busy']
+    channel_from_json.first_buffer = []
+    channel_from_json.second_buffer = []
+    channel_from_json.channel_buffer = []
     channel_from_json
   end
 

@@ -1,13 +1,19 @@
 class NetworkRandomGenerator
 
   def generate(builder, nodes_number, avg_channels_num)
+    satellite_channels = 0
     add_nodes(builder, nodes_number)
 
     nodes = builder.network.nodes
     (0...2 * avg_channels_num.floor).each do |i|
       ind_1 = (i >= nodes_number) ? i % nodes_number : i
       ind_2 = (i + 1 >= nodes_number) ? (i + 1) % nodes_number : i + 1
-      builder.add_random_channel(:duplex, nodes[ind_1], nodes[ind_2])
+      if satellite_channels < 3
+        builder.add_random_channel(:duplex, nodes[ind_1], nodes[ind_2], :satellite)
+        satellite_channels += 1
+      else
+        builder.add_random_channel(:duplex, nodes[ind_1], nodes[ind_2])
+      end
       break if ind_2 == 0
     end
 
@@ -30,7 +36,14 @@ class NetworkRandomGenerator
         condition = (builder.network.nodes[rand_ind_1].channels &
             builder.network.nodes[rand_ind_2].channels != [] || rand_ind_1 == rand_ind_2)
       end while condition
-      builder.add_random_channel(:duplex, builder.network.nodes[rand_ind_1], builder.network.nodes[rand_ind_2])
+      if satellite_channels < 3
+        builder.add_random_channel(:duplex, builder.network.nodes[rand_ind_1],
+                                   builder.network.nodes[rand_ind_2], :satellite)
+        satellite_channels += 1
+      else
+        builder.add_random_channel(:duplex, builder.network.nodes[rand_ind_1],
+                                   builder.network.nodes[rand_ind_2])
+      end
     end
 
     builder.network.nodes[rand(0...nodes_number)].type = :central

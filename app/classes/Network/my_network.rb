@@ -5,7 +5,7 @@ class MyNetwork
 
   attr_accessor :nodes, :channels, :nodes_number, :average_channels_num,
                 :channel_weights, :message_sending_mode, :is_initialized,
-                :messages_stack
+                :messages_stack, :criteria_for_routes, :established_connections
 
   def initialize
     @nodes = []
@@ -15,7 +15,9 @@ class MyNetwork
     @average_channels_num = 0
     @message_sending_mode = :datagram_mode
     @is_initialized = false
+    @criteria_for_routes = :time
     @messages_stack = MessagesStack.new
+    @established_connections = []
   end
 
 
@@ -101,7 +103,8 @@ class MyNetwork
         return_value = false
         break
       end
-      (channel.first_buffer + channel.second_buffer).each do |message|
+      buffers = channel.first_buffer + channel.second_buffer
+      buffers.each do |message|
         if [:positive_response, :negative_response, :request].include?(message.type)
           return_value = false
           break
@@ -111,6 +114,19 @@ class MyNetwork
     end
     return_value
     established_connection?(node_id_1, node_id_2) and return_value
+  end
+
+
+  def can_send_message?(message)
+    return_value = false
+    @established_connections.each do |nodes|
+      if [message.sender_node, message.receiver_node] == nodes
+        return_value = true
+        break
+      end
+    end
+
+    return_value
   end
 
 
@@ -125,7 +141,10 @@ class MyNetwork
         data:
         {
             nodes: @nodes.map(&:as_json), channels: @channels.map(&:as_json),
-            messages_stack: @messages_stack
+            messages_stack: @messages_stack.as_json, channel_weights: @channel_weights,
+            established_connections: @established_connections,
+            message_sending_mode: @message_sending_mode, criteria_for_routes: @criteria_for_routes,
+            nodes_number: @nodes_number, average_channels_num: @average_channels_num
         }
     }
   end
@@ -133,9 +152,15 @@ class MyNetwork
 
   def self.json_create(o)
     net_from_json = new
+    net_from_json.nodes_number = o['data']['nodes_number']
+    net_from_json.average_channels_num = o['data']['average_channels_num']
     net_from_json.nodes = o['data']['nodes']
     net_from_json.channels = o['data']['channels']
+    net_from_json.channel_weights = o['data']['channel_weights']
     net_from_json.messages_stack = o['data']['messages_stack']
+    net_from_json.established_connections = o['data']['established_connections']
+    net_from_json.message_sending_mode = o['data']['message_sending_mode'].to_sym
+    net_from_json.criteria_for_routes = o['data']['criteria_for_routes'].to_sym
     net_from_json
   end
 end

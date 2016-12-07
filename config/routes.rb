@@ -12,7 +12,10 @@ Rails.application.routes.draw do
   post 'network/update_channel'    => 'network#update_channel'
   post 'network/send_message'      => 'network#send_message'
   post 'network/generate_messages' => 'network#generate_messages'
+  post 'network/save_network'      => 'network#save_network'
+  post 'network/load_network'      => 'network#load_network'
   post 'network/update_node'       => 'network#update_node'
+  post 'network/find_routes_by'    => 'network#find_routes_by'
   get 'network/messages_statistics' => 'network#statistics'
 
   # The priority is based upon order of creation: first created -> highest priority.

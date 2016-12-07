@@ -29,11 +29,11 @@ class MessageGenerator
       receiver = @network.nodes[rand_ind].id
     end
 
-    unless @network.find_node(sender).routes_table[receiver.to_s].empty?
+    if @network.find_node(sender).routes_table.has_key?(receiver.to_s)
       message = Message.new(sender, receiver, initializer.message_size,
                             initializer.service_size, initializer.message_type)
 
-      if @message_sending_mode == :datagram_mode and initializer.message_type == :info
+      if initializer.message_type == :info
         divide_message_on_packets(message)
       else
         sender_node = @network.find_node(message.sender_node)
@@ -84,6 +84,8 @@ class MessageGenerator
       queue_handler.add_message_to_queue(small_message)
 
       message_size -= Constants.packet_size
+
+      small_message.is_last_packet = true if message_size <= 0
     end
   end
 

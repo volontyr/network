@@ -4,8 +4,13 @@ class RoutesFinder
     @network = network
   end
 
-  def find_routes(network = nil)
-    @network = network unless network.nil?
+  def find_routes
+    if @network.criteria_for_routes == :min_amount_of_nodes
+      true_channels = []
+      true_channels = @network.channels.map { |c| c.weight }
+      @network.channels.each { |c| c.weight = 1 }
+    end
+
     @network.nodes.reject { |n| n.activity == :non_active }.each do |node|
       node.routes_table = Hash.new
       marked_nodes = Hash.new
@@ -36,6 +41,28 @@ class RoutesFinder
           end
         end
         marked_nodes[current_node.to_s] = true
+      end
+    end
+
+
+    @network.nodes.reject { |n| n.activity == :non_active }.each do |node|
+      node.routes_table.each do |k, v|
+        unless v[0..-2].reverse == @network.find_node(k.to_i).routes_table[node.id.to_s][0..-2]
+          if v[0..-2].size <= @network.find_node(k.to_i).routes_table[node.id.to_s][0..-2].size
+            @network.find_node(k.to_i).routes_table[node.id.to_s] = v[0..-2].reverse + [node.id]
+          else
+            node.routes_table[k] = @network.find_node(k.to_i).routes_table[node.id.to_s][0..-2].reverse + [k.to_i]
+          end
+        end
+      end
+    end
+
+
+    if @network.criteria_for_routes == :min_amount_of_nodes
+      i = 0
+      @network.channels.each do |channel|
+        channel.weight = true_channels[i]
+        i += 1
       end
     end
   end

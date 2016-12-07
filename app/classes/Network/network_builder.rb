@@ -99,17 +99,28 @@ class NetworkBuilder
     @network_generator.generate(self, @network.nodes_number, @network.average_channels_num)
   end
 
-  def change_nodes_number(value)
-    raise ArgumentError, 'Argument must be numeric type' unless value.is_a?(Numeric)
-    @network.nodes_number = value
-  end
-
-  def change_average_channels_num(value)
-    raise ArgumentError, 'Argument must be numeric type' unless value.is_a?(Numeric)
-    @network.average_channels_num = value
-  end
 
   def network
     @network
+  end
+
+
+  def to_json(*a)
+    as_json.to_json(*a)
+  end
+
+
+  def as_json(options = {})
+    {
+        json_class: self.class.name,
+        data: { network: @network }
+    }
+  end
+
+
+  def self.json_create(o)
+    net_from_json = new
+    net_from_json.network = o['data']['network']
+    net_from_json
   end
 end

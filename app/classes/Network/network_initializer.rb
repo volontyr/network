@@ -8,13 +8,13 @@ class NetworkInitializer
 
   def initialize(network)
     @network = network
+    @network.message_sending_mode = :datagram_mode
   end
 
 
-  def initialize_network(network=nil)
-    @network = network unless network.nil?
+  def initialize_network(criteria_for_routes=:time)
     @network.delete_all_messages
-
+    @network.criteria_for_routes = criteria_for_routes
     RoutesFinder.new(@network).find_routes
 
     central_node = @network.central_node

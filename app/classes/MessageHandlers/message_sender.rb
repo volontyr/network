@@ -29,7 +29,8 @@ class MessageSender
     # !!!!!!!!!!!!!!!!!!!!!
     case message.type
       when :info, :update_routes_tables
-        if @network.can_send?(current_node, next_node)
+        # if @network.can_send?(current_node, message.receiver_node)
+        if @network.can_send_message?(message)
           put_message_in_channel(channel, message, delivery_time, current_node)
         end
       else
@@ -40,7 +41,7 @@ class MessageSender
 
   def put_message_in_channel(channel, message, delivery_time, current_node)
     if try_to_put_message_in_channel(channel, message, delivery_time)
-      # message.delivery_time += delivery_time
+      message.delivery_time += 1
       buffer_from = channel.get_buffer_by_node(current_node)
       buffer_from.delete(message)
     end
@@ -90,7 +91,7 @@ class MessageSender
 
   def get_delivery_time(message, channel)
     message_size = message.info_size + message.service_size
-    traffic_capacity = 100.0 / channel.weight
-    (message_size.to_f / traffic_capacity).round
+    traffic_capacity = channel.time_coefficient.to_f / channel.weight
+    message_size.to_f / traffic_capacity
   end
 end

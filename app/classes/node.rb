@@ -46,7 +46,7 @@ class Node
     {
         json_class: self.class.name,
         id: @id, coord_x: @coord_x, coord_y: @coord_y, channels: @channels.map(&:as_json),
-        routes_table: @routes_table, activity: @activity
+        routes_table: @routes_table, activity: @activity, type: @type
     }
   end
 
@@ -57,7 +57,8 @@ class Node
     node_from_json.coord_y = o['coord_y'].to_f
     node_from_json.channels = o['channels']
     node_from_json.routes_table = o['routes_table']
-    node_from_json.activity = o['activity']
+    node_from_json.activity = o['activity'].to_sym
+    node_from_json.type = o['type'].to_sym
     node_from_json
   end
 
