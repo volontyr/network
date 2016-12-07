@@ -1,0 +1,19 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    Send message <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <%= form_tag(action, method: 'post') do %>
+          <%= label_tag :size, 'Message size' %> (bytes)<br>
+          <%= number_field_tag :size %>
+          <%= label_tag :mode, 'Sending mode' %><br>
+          <%= select_tag :mode, options_for_select([:datagram_mode, :logical_connection]) %>
+          <strong>Nodes</strong> <br>
+          <%= select_tag :node_1, options_for_select(@network.nodes.collect{ |n| n.id }) %><br>
+          <%= select_tag :node_2, options_for_select(@network.nodes.collect{ |n| n.id }) %>
+          <%= submit_tag('Submit', class: "btn btn-success") %>
+      <% end %>
+    </li>
+  </ul>
+</div>

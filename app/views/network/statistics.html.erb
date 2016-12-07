@@ -1,0 +1,165 @@
+<%= link_to 'Back to network', network_path %>
+
+<% unless @messages_stack.nil? %>
+  <h2>Statistic report</h2>
+    <table class="table">
+      <tr>
+        <th>Characteristic</th>
+        <th>Value</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Total sent messages: </td>
+        <td><%= @total_sent_messages %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Total received messages: </td>
+        <td><%= @total_received_messages %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Total received info messages: </td>
+        <td><%= @total_received_info_messages %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Average delivery time of received messages: </td>
+        <td><%= @avg_time_of_received_messages.round(2) %></td>
+        <td>ms</td>
+      </tr>
+      <tr>
+        <td>Average delivery time of received info messages: </td>
+        <td><%= @avg_time_of_received_info_messages.round(2) %></td>
+        <td>ms</td>
+      </tr>
+      <tr>
+        <td>Info size of received messages: </td>
+        <td><%= @received_info_size %></td>
+        <td>bytes</td>
+      </tr>
+      <tr>
+        <td>Service size of received messages: </td>
+        <td><%= @received_service_size %></td>
+        <td>bytes</td>
+      </tr>
+      <tr>
+        <td>Info size of canceled messages: </td>
+        <td><%= @canceled_info_size %></td>
+        <td>bytes</td>
+      </tr>
+      <tr>
+        <td>Service size of canceled messages: </td>
+        <td><%= @canceled_service_size %></td>
+        <td>bytes</td>
+      </tr>
+    </table>
+  <h2>Messages</h2>
+  <% unless @messages_stack.received_messages.empty? %>
+    <p>
+      <h3>Received messages:</h3>
+      <h4>Info messages:</h4>
+      <table class="table">
+        <tr>
+          <th>Id</th>
+          <th>Type</th>
+          <th>Size (bytes)</th>
+          <th>Sender</th>
+          <th>Receiver</th>
+          <th>Delivery time</th>
+          <th></th>
+        </tr>
+        <% @messages_stack.received_messages.each do |message| %>
+          <% next if @messages_stack.service_messages.include?(message) %>
+          <tr>
+            <td><%= message.id %></td>
+            <td><%= message.type.to_s %></td>
+            <td><%= message.info_size + message.service_size %></td>
+            <td><%= message.sender_node %></td>
+            <td><%= message.receiver_node %></td>
+            <td><%= message.delivery_time.round(2) %></td>
+            <td>ms</td>
+          </tr>
+        <% end %>
+      </table>
+      <h4>Service messages:</h4>
+      <table class="table">
+        <tr>
+          <th>Id</th>
+          <th>Type</th>
+          <th>Size (bytes)</th>
+          <th>Sender</th>
+          <th>Receiver</th>
+          <th>Delivery time</th>
+          <th></th>
+        </tr>
+        <% @messages_stack.received_messages.each do |message| %>
+          <% next if @messages_stack.info_messages.include?(message) %>
+          <tr>
+            <td><%= message.id %></td>
+            <td><%= message.type.to_s %></td>
+            <td><%= message.info_size + message.service_size %></td>
+            <td><%= message.sender_node %></td>
+            <td><%= message.receiver_node %></td>
+            <td><%= message.delivery_time.round(2) %></td>
+            <td>ms</td>
+          </tr>
+        <% end %>
+      </table>
+    </p>
+  <% end %>
+
+  <% unless @messages_stack.canceled_messages.empty? %>
+    <p>
+    <h3>Canceled messages:</h3>
+    <h4>Info messages:</h4>
+    <table class="table">
+      <tr>
+        <th>Id</th>
+        <th>Type</th>
+        <th>Size (bytes)</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Delivery time</th>
+        <th></th>
+      </tr>
+      <% @messages_stack.canceled_messages.each do |message| %>
+        <% next if @messages_stack.service_messages.include?(message) %>
+        <tr>
+          <td><%= message.id %></td>
+          <td><%= message.type.to_s %></td>
+          <td><%= message.info_size + message.service_size %></td>
+          <td><%= message.sender_node %></td>
+          <td><%= message.receiver_node %></td>
+          <td><%= message.delivery_time.round(2) %></td>
+          <td>ms</td>
+        </tr>
+      <% end %>
+    </table>
+    <h4>Service messages:</h4>
+    <table class="table">
+      <tr>
+        <th>Id</th>
+        <th>Type</th>
+        <th>Size (bytes)</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Delivery time</th>
+        <th></th>
+      </tr>
+      <% @messages_stack.canceled_messages.each do |message| %>
+        <% next if @messages_stack.info_messages.include?(message) %>
+        <tr>
+          <td><%= message.id %></td>
+          <td><%= message.type.to_s %></td>
+          <td><%= message.info_size + message.service_size %></td>
+          <td><%= message.sender_node %></td>
+          <td><%= message.receiver_node %></td>
+          <td><%= message.delivery_time.round(2) %></td>
+          <td>ms</td>
+        </tr>
+      <% end %>
+    </table>
+    </p>
+  <% end %>
+<% end %>

@@ -12,9 +12,17 @@
     <%= button_to 'Generate network', {:controller => 'network', :action => 'create'},
                   params: { :nodes_number => @network.nodes_number,
                             :average_channels_num => @network.average_channels_num },
+                  class: 'btn btn-default' %>
+
+    <%= button_to 'Save network', {:controller => 'network', :action => 'save_network'},
+                  class: 'btn btn-default' %>
+
+    <%= button_to 'Load network', {:controller => 'network', :action => 'load_network'},
                   class: 'btn btn-default' %><br>
 
     <%= render partial: 'send_message', :locals => {action: '/network/send_message'} %>
 
     <%= render partial: 'generate_messages', :locals => {action: '/network/generate_messages'} %>
+
+    <%= render partial: 'find_routes', :locals => {action: '/network/find_routes_by'} %>
 <% end %>

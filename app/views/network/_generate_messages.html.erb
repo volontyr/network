@@ -1,0 +1,20 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    Generate messages <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <%= form_tag(action, method: 'post') do %>
+          <%= label_tag :number, 'Number of messages' %><br>
+          <%= number_field_tag :number %>
+          <%= label_tag :size, 'Size of messages' %> (bytes)<br>
+          <%= number_field_tag :size %>
+          <%= label_tag :new_message_probability, 'Probability of new message creating' %><br>
+          <%= number_field_tag :new_message_probability, nil, :step => :any, min: 0, max: 1 %>
+          <%= label_tag :mode, 'Sending mode' %><br>
+          <%= select_tag :mode, options_for_select([:datagram_mode, :logical_connection]) %>
+          <%= submit_tag('Submit', class: "btn btn-success") %>
+      <% end %>
+    </li>
+  </ul>
+</div>

@@ -6,7 +6,7 @@
     <li>
       <%= form_tag(action, method: 'post') do %>
           <p>
-            Choose node to add to <br>
+            Choose node <br>
             <%= select_tag :node, options_for_select(@network.nodes.collect{ |n| n.id }) %>
           </p>
           <%= submit_tag('Submit', class: "btn btn-#{button_class}") %>

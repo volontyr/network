@@ -44,7 +44,7 @@ function generate_network(network) {
                 var modal_window = $('#modal_form');
 
                 modal_window.find('#weight').val(channel.weight);
-                modal_window.find('#error_prob').val(channel.error_prob);
+                modal_window.find('#error_prob').val(channel.error_prob.toFixed(2));
                 modal_window.find('#type').val(channel.type);
                 modal_window.find('#connection_type').val(channel.json_class);
                 modal_window.find('#activity').val(channel.activity);

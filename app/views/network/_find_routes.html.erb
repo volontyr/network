@@ -1,0 +1,14 @@
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    Find routes by <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <%= form_tag(action, method: 'post') do %>
+          <%= label_tag :criteria, 'criteria' %><br>
+          <%= select_tag :criteria, options_for_select([:time, :min_amount_of_nodes]) %>
+          <%= submit_tag('Submit', class: "btn btn-success") %>
+      <% end %>
+    </li>
+  </ul>
+</div>
